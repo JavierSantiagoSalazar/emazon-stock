@@ -6,4 +6,6 @@ public interface CategoryPersistencePort {
 
     void saveCategory(Category category);
 
+    Boolean checkIfCategoryExists(String categoryName);
+
 }

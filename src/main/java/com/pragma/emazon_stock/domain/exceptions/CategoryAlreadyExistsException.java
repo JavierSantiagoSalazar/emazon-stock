@@ -1,4 +1,4 @@
-package com.pragma.emazon_stock.infrastructure.configuration.exception.exceptions;
+package com.pragma.emazon_stock.domain.exceptions;
 
 public class CategoryAlreadyExistsException extends RuntimeException{
     public CategoryAlreadyExistsException() {

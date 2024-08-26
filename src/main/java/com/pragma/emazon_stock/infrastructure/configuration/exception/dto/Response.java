@@ -2,10 +2,10 @@ package com.pragma.emazon_stock.infrastructure.configuration.exception.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
-@Data
+@Getter
 @Builder
 @AllArgsConstructor
 public class Response {

@@ -6,4 +6,6 @@ public interface CategoryServicePort {
 
     void saveCategory(Category category);
 
+    boolean checkIfCategoryExists(String categoryName);
+
 }

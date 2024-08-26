@@ -1,7 +1,7 @@
 package com.pragma.emazon_stock.infrastructure.configuration.exception.exceptionhandler;
 
 import com.pragma.emazon_stock.infrastructure.configuration.exception.dto.Response;
-import com.pragma.emazon_stock.infrastructure.configuration.exception.exceptions.CategoryAlreadyExistsException;
+import com.pragma.emazon_stock.domain.exceptions.CategoryAlreadyExistsException;
 import com.pragma.emazon_stock.infrastructure.utils.Constants;
 import org.springframework.context.MessageSourceResolvable;
 import org.springframework.http.HttpStatus;
