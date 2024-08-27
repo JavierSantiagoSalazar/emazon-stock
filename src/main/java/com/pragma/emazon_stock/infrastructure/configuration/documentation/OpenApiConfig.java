@@ -1,5 +1,6 @@
 package com.pragma.emazon_stock.infrastructure.configuration.documentation;
 
+import com.pragma.emazon_stock.infrastructure.utils.Constants;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
@@ -12,17 +13,18 @@ import org.springframework.context.annotation.Configuration;
 public class OpenApiConfig {
 
     @Bean
-    public OpenAPI customOpenApi(@Value("${appdescription}") String appDescription,
-                                 @Value("${appversion}") String appVersion) {
+    public OpenAPI customOpenApi(@Value(Constants.OPEN_API_APP_DESCRIPTION) String appDescription,
+                                 @Value(Constants.OPEN_API_APP_VERSION) String appVersion) {
         return new OpenAPI()
                 .components(new Components())
                 .info(new Info()
-                        .title("Emazon Stock API")
+                        .title(Constants.OPEN_API_TITLE)
                         .version(appVersion)
                         .description(appDescription)
-                        .termsOfService("http://swagger.io/terms/")
-                        .license(new License().name("Apache 2.0").url("http://springdoc.org"))
+                        .termsOfService(Constants.OPEN_API_TERMS)
+                        .license(new License().name(Constants.OPEN_API_LICENCE_NAME).url(Constants.OPEN_API_LICENCE_URL))
                 );
 
     }
+
 }

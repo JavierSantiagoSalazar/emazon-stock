@@ -1,6 +1,6 @@
 package com.pragma.emazon_stock.application.mappers;
 
-import com.pragma.emazon_stock.application.dto.CategoryRequest;
+import com.pragma.emazon_stock.application.dto.CategoryResponse;
 import com.pragma.emazon_stock.domain.model.Category;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
@@ -9,8 +9,8 @@ import org.mapstruct.ReportingPolicy;
         unmappedTargetPolicy = ReportingPolicy.IGNORE,
         unmappedSourcePolicy = ReportingPolicy.IGNORE)
 
-public interface CategoryRequestMapper {
+public interface CategoryResponseMapper {
 
-    Category toDomain(CategoryRequest categoryRequest);
+    CategoryResponse toResponse(Category category);
 
 }
