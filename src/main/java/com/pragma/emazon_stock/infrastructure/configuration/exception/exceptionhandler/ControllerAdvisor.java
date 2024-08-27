@@ -1,5 +1,8 @@
 package com.pragma.emazon_stock.infrastructure.configuration.exception.exceptionhandler;
 
+import com.pragma.emazon_stock.domain.exceptions.NoContentCategoryException;
+import com.pragma.emazon_stock.domain.exceptions.PageOutOfBoundsException;
+import com.pragma.emazon_stock.infrastructure.configuration.exception.dto.PaginatedResponse;
 import com.pragma.emazon_stock.infrastructure.configuration.exception.dto.Response;
 import com.pragma.emazon_stock.domain.exceptions.CategoryAlreadyExistsException;
 import com.pragma.emazon_stock.infrastructure.utils.Constants;
@@ -43,6 +46,37 @@ public class ControllerAdvisor {
                         .statusCode(HttpStatus.BAD_REQUEST)
                         .message(errors.toString())
                         .build(),
+                HttpStatus.BAD_REQUEST
+        );
+    }
+
+    @ExceptionHandler(NoContentCategoryException.class)
+    public ResponseEntity<Response> handleNoContentCategoryException(
+            NoContentCategoryException noContentCategoryException
+    ) {
+        return new ResponseEntity<>(
+                Response.builder()
+                        .statusCode(HttpStatus.NO_CONTENT)
+                        .message(Constants.CATEGORY_NO_CONTENT_MESSAGE)
+                        .build(),
+                HttpStatus.NO_CONTENT
+        );
+    }
+
+    @ExceptionHandler(PageOutOfBoundsException.class)
+    public ResponseEntity<PaginatedResponse> handlePageOutOfBoundsException(
+            PageOutOfBoundsException pageOutOfBoundsException
+    ) {
+
+        return new ResponseEntity<>(
+                new PaginatedResponse(
+                        Response.builder()
+                                .statusCode(HttpStatus.BAD_REQUEST)
+                                .message(pageOutOfBoundsException.getMessage())
+                                .build(),
+                        pageOutOfBoundsException.getRequestedPage(),
+                        pageOutOfBoundsException.getTotalPages()
+                ),
                 HttpStatus.BAD_REQUEST
         );
     }

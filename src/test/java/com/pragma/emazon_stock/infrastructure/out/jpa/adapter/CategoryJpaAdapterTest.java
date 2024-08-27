@@ -11,12 +11,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest
 class CategoryJpaAdapterTest {
@@ -41,12 +40,12 @@ class CategoryJpaAdapterTest {
     @Test
     void givenCategory_whenSaveCategoryIsCalled_thenCategoryIsSaved() {
 
-        when(categoryEntityMapper.domainCategoryToCategoryEntity(defaultCategory)).thenReturn(defaultCategoryEntity);
+        when(categoryEntityMapper.toEntity(defaultCategory)).thenReturn(defaultCategoryEntity);
 
         categoryJpaAdapter.saveCategory(defaultCategory);
 
-        verify(categoryRepository).save(defaultCategoryEntity);
-        verify(categoryEntityMapper).domainCategoryToCategoryEntity(defaultCategory);
+        verify(categoryRepository, times(1)).save(defaultCategoryEntity);
+        verify(categoryEntityMapper, times(1)).toEntity(defaultCategory);
 
     }
 
@@ -57,7 +56,7 @@ class CategoryJpaAdapterTest {
 
         Boolean result = categoryJpaAdapter.checkIfCategoryExists(defaultCategory.getName());
 
-        verify(categoryRepository).findByName(defaultCategory.getName());
+        verify(categoryRepository, times(1)).findByName(defaultCategory.getName());
 
         assertTrue(result);
     }
@@ -69,9 +68,33 @@ class CategoryJpaAdapterTest {
 
         Boolean result = categoryJpaAdapter.checkIfCategoryExists(defaultCategory.getName());
 
-        verify(categoryRepository).findByName(defaultCategory.getName());
+        verify(categoryRepository, times(1)).findByName(defaultCategory.getName());
 
         assertFalse(result);
+
+    }
+
+    @Test
+    void whenGetAllCategories_thenReturnCategoriesList() {
+
+        CategoryEntity categoryEntity = new CategoryEntity(1, "HOME", "Description");
+        List<CategoryEntity> categoryEntityList = List.of(categoryEntity);
+
+        Category category = new Category(1, "HOME", "Description");
+        List<Category> categoryList = List.of(category);
+
+        when(categoryRepository.findAll()).thenReturn(categoryEntityList);
+        when(categoryEntityMapper.toCategoryList(categoryEntityList)).thenReturn(categoryList);
+
+        List<Category> result = categoryJpaAdapter.getAllCategories();
+
+        assertEquals(1, result.size());
+        assertEquals("HOME", result.get(0).getName());
+        assertEquals("Description", result.get(0).getDescription());
+
+        verify(categoryRepository, times(1)).findAll();
+
+        verify(categoryEntityMapper, times(1)).toCategoryList(categoryEntityList);
     }
 
 }

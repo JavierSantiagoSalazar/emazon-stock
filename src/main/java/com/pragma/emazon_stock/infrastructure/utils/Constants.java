@@ -7,9 +7,11 @@ public class Constants {
     }
 
     /* --- EXCEPTIONS CONSTANTS --- */
-    public static final String CATEGORY_ALREADY_EXISTS_EXCEPTION_MESSAGE = "The category already exists";
 
-    /* --- VALIDATIONS CONSTANTS --- */
+    public static final String CATEGORY_ALREADY_EXISTS_EXCEPTION_MESSAGE = "The category already exists";
+    public static final String CATEGORY_NO_CONTENT_MESSAGE = "There are currently no categories";
+
+    /* --- VALIDATION CONSTANTS --- */
 
     public static final String CATEGORY_NAME_MUST_NOT_BE_BLANK = "The category name must not be blank";
     public static final String CATEGORY_NAME_MUST_NOT_BE_NULL = "The category name must not be null";
@@ -18,4 +20,12 @@ public class Constants {
     public static final String CATEGORY_DESCRIPTION_MUST_NOT_BE_NULL = "The category description must not be null";
     public static final String CATEGORY_DESCRIPTION_LENGTH_EXCEEDED = "The length of the description cannot exceed 90 characters";
 
+    /* --- OPENAPI CONSTANTS --- */
+
+    public static final String OPEN_API_TITLE = "Emazon Stock API";
+    public static final String OPEN_API_TERMS = "http://swagger.io/terms/";
+    public static final String OPEN_API_LICENCE_NAME = "Apache 2.0";
+    public static final String OPEN_API_LICENCE_URL = "http://springdoc.org";
+    public static final String OPEN_API_APP_DESCRIPTION = "${appDescription}";
+    public static final String OPEN_API_APP_VERSION = "${appVersion}";
 }
