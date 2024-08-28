@@ -1,8 +1,8 @@
 package com.pragma.emazon_stock.infrastructure.input.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.pragma.emazon_stock.application.dto.CategoryRequest;
-import com.pragma.emazon_stock.application.dto.CategoryResponse;
+import com.pragma.emazon_stock.application.dto.category.CategoryRequest;
+import com.pragma.emazon_stock.application.dto.category.CategoryResponse;
 import com.pragma.emazon_stock.application.handler.category.CategoryHandler;
 import com.pragma.emazon_stock.domain.exceptions.CategoryAlreadyExistsException;
 import com.pragma.emazon_stock.domain.exceptions.PageOutOfBoundsException;
@@ -54,6 +54,7 @@ class CategoryRestControllerTest {
         categoryRequest.setDescription("All things related with home");
 
         categoryResponse = new CategoryResponse();
+        categoryResponse.setId(1);
         categoryResponse.setName("HOME");
         categoryResponse.setDescription("All things related with home");
 

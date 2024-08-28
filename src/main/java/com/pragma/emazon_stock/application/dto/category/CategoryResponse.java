@@ -1,4 +1,4 @@
-package com.pragma.emazon_stock.application.dto;
+package com.pragma.emazon_stock.application.dto.category;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -7,7 +7,7 @@ import lombok.Setter;
 @Setter
 public class CategoryResponse {
 
-    private String id;
+    private Integer id;
     private String name;
     private String description;
 

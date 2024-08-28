@@ -11,6 +11,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -74,6 +75,29 @@ class BrandJpaAdapterTest {
 
         assertFalse(result);
 
+    }
+
+    @Test
+    void whenGetAllBrands_thenReturnBrandsList() {
+
+        BrandEntity brandEntity = new BrandEntity(1, "NOKIA", "Description");
+        List<BrandEntity> brandEntityList = List.of(brandEntity);
+
+        Brand brand = new Brand(1, "NOKIA", "Description");
+        List<Brand> brandList = List.of(brand);
+
+        when(brandRepository.findAll()).thenReturn(brandEntityList);
+        when(brandEntityMapper.toBrandList(brandEntityList)).thenReturn(brandList);
+
+        List<Brand> result = brandJpaAdapter.getAllBrands();
+
+        assertEquals(1, result.size());
+        assertEquals("NOKIA", result.get(0).getBrandName());
+        assertEquals("Description", result.get(0).getBrandDescription());
+
+        verify(brandRepository, times(1)).findAll();
+
+        verify(brandEntityMapper, times(1)).toBrandList(brandEntityList);
     }
 
 }

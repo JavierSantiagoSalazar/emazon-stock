@@ -1,9 +1,13 @@
 package com.pragma.emazon_stock.infrastructure.input.rest;
 
-import com.pragma.emazon_stock.application.dto.BrandRequest;
+import com.pragma.emazon_stock.application.dto.brand.BrandRequest;
+import com.pragma.emazon_stock.application.dto.brand.BrandResponse;
 import com.pragma.emazon_stock.application.handler.brand.BrandHandler;
+import com.pragma.emazon_stock.domain.model.Pagination;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
@@ -37,6 +41,25 @@ public class BrandRestController {
                 .toUri();
 
         return ResponseEntity.created(location).build();
+    }
+
+    @Operation(summary = "Get all brands")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Brands obtained",
+                    content = @Content(
+                            mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = BrandResponse.class))
+                    )
+            ),
+            @ApiResponse(responseCode = "400", description = "The page requested is out of range", content = @Content)
+    })
+    @GetMapping("/")
+    public ResponseEntity<Pagination<BrandResponse>> getBrands(
+            @RequestParam(defaultValue = "asc") String sortOrder,
+            @RequestParam(defaultValue = "1") Integer page,
+            @RequestParam(defaultValue = "10") Integer size
+    ) {
+        return ResponseEntity.ok(brandHandler.getBrands(sortOrder, page, size));
     }
 
 }

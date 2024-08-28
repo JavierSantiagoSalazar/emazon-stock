@@ -1,7 +1,7 @@
 package com.pragma.emazon_stock.infrastructure.input.rest;
 
-import com.pragma.emazon_stock.application.dto.CategoryRequest;
-import com.pragma.emazon_stock.application.dto.CategoryResponse;
+import com.pragma.emazon_stock.application.dto.category.CategoryRequest;
+import com.pragma.emazon_stock.application.dto.category.CategoryResponse;
 import com.pragma.emazon_stock.application.handler.category.CategoryHandler;
 import com.pragma.emazon_stock.domain.model.Pagination;
 import io.swagger.v3.oas.annotations.Operation;
