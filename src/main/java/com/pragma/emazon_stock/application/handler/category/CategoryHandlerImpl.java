@@ -1,9 +1,9 @@
-package com.pragma.emazon_stock.application.handler;
+package com.pragma.emazon_stock.application.handler.category;
 
 import com.pragma.emazon_stock.application.dto.CategoryRequest;
 import com.pragma.emazon_stock.application.dto.CategoryResponse;
-import com.pragma.emazon_stock.application.mappers.CategoryRequestMapper;
-import com.pragma.emazon_stock.application.mappers.CategoryResponseMapper;
+import com.pragma.emazon_stock.application.mappers.category.CategoryRequestMapper;
+import com.pragma.emazon_stock.application.mappers.category.CategoryResponseMapper;
 import com.pragma.emazon_stock.domain.api.CategoryServicePort;
 import com.pragma.emazon_stock.domain.model.Category;
 import com.pragma.emazon_stock.domain.model.Pagination;

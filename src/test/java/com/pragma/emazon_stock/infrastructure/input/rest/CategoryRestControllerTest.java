@@ -3,7 +3,7 @@ package com.pragma.emazon_stock.infrastructure.input.rest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pragma.emazon_stock.application.dto.CategoryRequest;
 import com.pragma.emazon_stock.application.dto.CategoryResponse;
-import com.pragma.emazon_stock.application.handler.CategoryHandler;
+import com.pragma.emazon_stock.application.handler.category.CategoryHandler;
 import com.pragma.emazon_stock.domain.exceptions.CategoryAlreadyExistsException;
 import com.pragma.emazon_stock.domain.exceptions.PageOutOfBoundsException;
 import com.pragma.emazon_stock.domain.model.Pagination;
@@ -22,6 +22,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.List;
 
+import static org.hamcrest.Matchers.containsString;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -47,6 +48,7 @@ class CategoryRestControllerTest {
 
     @BeforeEach
     public void setUp() {
+
         categoryRequest = new CategoryRequest();
         categoryRequest.setName("HOME");
         categoryRequest.setDescription("All things related with home");
@@ -54,6 +56,7 @@ class CategoryRestControllerTest {
         categoryResponse = new CategoryResponse();
         categoryResponse.setName("HOME");
         categoryResponse.setDescription("All things related with home");
+
     }
 
     @Test
@@ -92,6 +95,54 @@ class CategoryRestControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(categoryRequest)))
                 .andExpect(status().isConflict());
+
+    }
+
+    @Test
+    void givenCategoryNameExceedsMaxLength_whenCreateCategory_thenReturns400() throws Exception {
+
+        categoryRequest.setName("A".repeat(51));
+
+        mockMvc.perform(post("/category/")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(categoryRequest)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.statusCode").value(HttpStatus.BAD_REQUEST.name()))
+                .andExpect(jsonPath("$.message").value(
+                        "[The length of the name cannot exceed 50 characters]"
+                ));
+
+    }
+
+    @Test
+    void givenCategoryDescriptionExceedsMaxLength_whenCreateCategory_thenReturns400() throws Exception {
+
+        categoryRequest.setDescription("B".repeat(91));
+
+        mockMvc.perform(post("/category/")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(categoryRequest)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.statusCode").value(HttpStatus.BAD_REQUEST.name()))
+                .andExpect(jsonPath("$.message").value(
+                        "[The length of the description cannot exceed 90 characters]"
+                ));
+
+    }
+
+    @Test
+    void givenCategoryNameAndDescriptionExceedMaxLength_whenCreateCategory_thenReturns400() throws Exception {
+
+        categoryRequest.setName("A".repeat(51));
+        categoryRequest.setDescription("B".repeat(91));
+
+        mockMvc.perform(post("/category/")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(categoryRequest)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.statusCode").value(HttpStatus.BAD_REQUEST.name()))
+                .andExpect(jsonPath("$.message").value(containsString("The length of the name cannot exceed 50 characters")))
+                .andExpect(jsonPath("$.message").value(containsString("The length of the description cannot exceed 90 characters")));
 
     }
 

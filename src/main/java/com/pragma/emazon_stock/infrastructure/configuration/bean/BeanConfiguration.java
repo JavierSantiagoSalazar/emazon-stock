@@ -1,10 +1,16 @@
 package com.pragma.emazon_stock.infrastructure.configuration.bean;
 
+import com.pragma.emazon_stock.domain.api.BrandServicePort;
 import com.pragma.emazon_stock.domain.api.CategoryServicePort;
+import com.pragma.emazon_stock.domain.spi.BrandPersistencePort;
 import com.pragma.emazon_stock.domain.spi.CategoryPersistencePort;
+import com.pragma.emazon_stock.domain.usecase.BrandUseCase;
 import com.pragma.emazon_stock.domain.usecase.CategoryUseCase;
+import com.pragma.emazon_stock.infrastructure.out.jpa.adapter.BrandJpaAdapter;
 import com.pragma.emazon_stock.infrastructure.out.jpa.adapter.CategoryJpaAdapter;
+import com.pragma.emazon_stock.infrastructure.out.jpa.mapper.BrandEntityMapper;
 import com.pragma.emazon_stock.infrastructure.out.jpa.mapper.CategoryEntityMapper;
+import com.pragma.emazon_stock.infrastructure.out.jpa.repository.BrandRepository;
 import com.pragma.emazon_stock.infrastructure.out.jpa.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -17,6 +23,9 @@ public class BeanConfiguration {
     private final CategoryRepository categoryRepository;
     private final CategoryEntityMapper categoryEntityMapper;
 
+    private final BrandRepository brandRepository;
+    private final BrandEntityMapper brandEntityMapper;
+
     @Bean
     public CategoryPersistencePort categoryPersistencePort() {
         return new CategoryJpaAdapter(categoryRepository, categoryEntityMapper);
@@ -25,6 +34,16 @@ public class BeanConfiguration {
     @Bean
     public CategoryServicePort categoryServicePort() {
         return new CategoryUseCase(categoryPersistencePort());
+    }
+
+    @Bean
+    public BrandPersistencePort brandPersistencePort() {
+        return new BrandJpaAdapter(brandRepository, brandEntityMapper);
+    }
+
+    @Bean
+    public BrandServicePort brandServicePort() {
+        return new BrandUseCase(brandPersistencePort());
     }
 
 }

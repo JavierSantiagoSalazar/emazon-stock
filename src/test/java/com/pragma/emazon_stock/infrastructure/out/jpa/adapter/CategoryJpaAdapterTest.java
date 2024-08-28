@@ -4,7 +4,7 @@ import com.pragma.emazon_stock.domain.model.Category;
 import com.pragma.emazon_stock.infrastructure.out.jpa.entity.CategoryEntity;
 import com.pragma.emazon_stock.infrastructure.out.jpa.mapper.CategoryEntityMapper;
 import com.pragma.emazon_stock.infrastructure.out.jpa.repository.CategoryRepository;
-import com.pragma.emazon_stock.utils.CategoryTestFactory;
+import com.pragma.emazon_stock.utils.ModelsTestFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -33,8 +33,8 @@ class CategoryJpaAdapterTest {
 
     @BeforeEach
     public void setUp() {
-        defaultCategory = CategoryTestFactory.createDefaultCategory();
-        defaultCategoryEntity = CategoryTestFactory.createDefaultCategoryEntity();
+        defaultCategory = ModelsTestFactory.createDefaultCategory();
+        defaultCategoryEntity = ModelsTestFactory.createDefaultCategoryEntity();
     }
 
     @Test

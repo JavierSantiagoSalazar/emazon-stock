@@ -1,4 +1,4 @@
-package com.pragma.emazon_stock.application.mappers;
+package com.pragma.emazon_stock.application.mappers.category;
 
 import com.pragma.emazon_stock.application.dto.CategoryRequest;
 import com.pragma.emazon_stock.domain.model.Category;

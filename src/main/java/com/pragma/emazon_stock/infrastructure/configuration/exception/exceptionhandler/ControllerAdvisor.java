@@ -1,5 +1,6 @@
 package com.pragma.emazon_stock.infrastructure.configuration.exception.exceptionhandler;
 
+import com.pragma.emazon_stock.domain.exceptions.BrandAlreadyExistsException;
 import com.pragma.emazon_stock.domain.exceptions.NoContentCategoryException;
 import com.pragma.emazon_stock.domain.exceptions.PageOutOfBoundsException;
 import com.pragma.emazon_stock.infrastructure.configuration.exception.dto.PaginatedResponse;
@@ -26,6 +27,19 @@ public class ControllerAdvisor {
                 Response.builder()
                         .statusCode(HttpStatus.CONFLICT)
                         .message(Constants.CATEGORY_ALREADY_EXISTS_EXCEPTION_MESSAGE)
+                        .build(),
+                HttpStatus.CONFLICT
+        );
+    }
+
+    @ExceptionHandler(BrandAlreadyExistsException.class)
+    public ResponseEntity<Response> handleBrandAlreadyExistsException(
+            BrandAlreadyExistsException brandAlreadyExistsException
+    ) {
+        return new ResponseEntity<>(
+                Response.builder()
+                        .statusCode(HttpStatus.CONFLICT)
+                        .message(Constants.BRAND_ALREADY_EXISTS_EXCEPTION_MESSAGE)
                         .build(),
                 HttpStatus.CONFLICT
         );

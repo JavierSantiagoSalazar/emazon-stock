@@ -6,12 +6,16 @@ public class Constants {
         throw new IllegalStateException("Utility class");
     }
 
-    /* --- EXCEPTIONS CONSTANTS --- */
+    /* --- EXCEPTIONS CONSTANTS: CATEGORY --- */
 
     public static final String CATEGORY_ALREADY_EXISTS_EXCEPTION_MESSAGE = "The category already exists";
     public static final String CATEGORY_NO_CONTENT_MESSAGE = "There are currently no categories";
 
-    /* --- VALIDATION CONSTANTS --- */
+    /* --- EXCEPTIONS CONSTANTS: BRAND --- */
+
+    public static final String BRAND_ALREADY_EXISTS_EXCEPTION_MESSAGE = "The brand already exists";
+
+    /* --- VALIDATION CONSTANTS: CATEGORY--- */
 
     public static final String CATEGORY_NAME_MUST_NOT_BE_BLANK = "The category name must not be blank";
     public static final String CATEGORY_NAME_MUST_NOT_BE_NULL = "The category name must not be null";
@@ -19,6 +23,15 @@ public class Constants {
     public static final String CATEGORY_DESCRIPTION_MUST_NOT_BE_BLANK = "The category description must not be blank";
     public static final String CATEGORY_DESCRIPTION_MUST_NOT_BE_NULL = "The category description must not be null";
     public static final String CATEGORY_DESCRIPTION_LENGTH_EXCEEDED = "The length of the description cannot exceed 90 characters";
+
+    /* --- VALIDATION CONSTANTS: BRAND--- */
+
+    public static final String BRAND_NAME_MUST_NOT_BE_BLANK = "The brand name must not be blank";
+    public static final String BRAND_NAME_MUST_NOT_BE_NULL = "The brand name must not be null";
+    public static final String BRAND_NAME_LENGTH_EXCEEDED = "The length of the name cannot exceed 50 characters";
+    public static final String BRAND_DESCRIPTION_MUST_NOT_BE_BLANK = "The brand description must not be blank";
+    public static final String BRAND_DESCRIPTION_MUST_NOT_BE_NULL = "The brand description must not be null";
+    public static final String BRAND_DESCRIPTION_LENGTH_EXCEEDED = "The length of the description cannot exceed 120 characters";
 
     /* --- OPENAPI CONSTANTS --- */
 

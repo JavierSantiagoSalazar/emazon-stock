@@ -1,4 +1,4 @@
-package com.pragma.emazon_stock.application.handler;
+package com.pragma.emazon_stock.application.handler.category;
 
 import com.pragma.emazon_stock.application.dto.CategoryRequest;
 import com.pragma.emazon_stock.application.dto.CategoryResponse;
