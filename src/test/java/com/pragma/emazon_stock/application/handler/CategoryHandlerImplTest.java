@@ -2,8 +2,9 @@ package com.pragma.emazon_stock.application.handler;
 
 import com.pragma.emazon_stock.application.dto.CategoryRequest;
 import com.pragma.emazon_stock.application.dto.CategoryResponse;
-import com.pragma.emazon_stock.application.mappers.CategoryRequestMapper;
-import com.pragma.emazon_stock.application.mappers.CategoryResponseMapper;
+import com.pragma.emazon_stock.application.handler.category.CategoryHandlerImpl;
+import com.pragma.emazon_stock.application.mappers.category.CategoryRequestMapper;
+import com.pragma.emazon_stock.application.mappers.category.CategoryResponseMapper;
 import com.pragma.emazon_stock.domain.api.CategoryServicePort;
 import com.pragma.emazon_stock.domain.model.Category;
 import com.pragma.emazon_stock.domain.model.Pagination;
@@ -35,6 +36,7 @@ class CategoryHandlerImplTest {
 
     @Test
     void givenValidCategoryRequest_whenCreateCategory_thenCategoryIsSaved() {
+
         CategoryRequest categoryRequest = new CategoryRequest();
         categoryRequest.setName(" Home ");
         categoryRequest.setDescription("  All things for the home  ");
@@ -47,10 +49,11 @@ class CategoryHandlerImplTest {
 
         verify(categoryRequestMapper,times(1)).toDomain(categoryRequest);
         verify(categoryServicePort, times(1)).saveCategory(mappedCategory);
+
     }
 
     @Test
-    void testGetCategories() {
+    void givenValidRequest_whenGetCategories_thenReturnsCategoriesList() {
 
         String sortOrder = "asc";
         Integer page = 1;
@@ -86,6 +89,7 @@ class CategoryHandlerImplTest {
 
         verify(categoryServicePort, times(1)).getCategories(sortOrder, page, size);
         verify(categoryResponseMapper, times(1)).toResponse(category);
+
     }
 
 }

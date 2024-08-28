@@ -6,7 +6,7 @@ import com.pragma.emazon_stock.domain.exceptions.PageOutOfBoundsException;
 import com.pragma.emazon_stock.domain.model.Category;
 import com.pragma.emazon_stock.domain.model.Pagination;
 import com.pragma.emazon_stock.domain.spi.CategoryPersistencePort;
-import com.pragma.emazon_stock.utils.CategoryTestFactory;
+import com.pragma.emazon_stock.utils.ModelsTestFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -33,7 +33,7 @@ class CategoryUseCaseTest {
 
     @BeforeEach
     public void setUp() {
-        defaultCategory = CategoryTestFactory.createDefaultCategory();
+        defaultCategory = ModelsTestFactory.createDefaultCategory();
     }
 
     @Test
@@ -49,7 +49,6 @@ class CategoryUseCaseTest {
 
     @Test
     void givenCategoryAlreadyExists_whenSaveCategoryIsCalled_thenThrowsException() {
-
         when(categoryPersistencePort.checkIfCategoryExists(defaultCategory.getName())).thenReturn(true);
 
         assertThrows(CategoryAlreadyExistsException.class, () -> categoryUseCase.saveCategory(defaultCategory));
@@ -61,7 +60,6 @@ class CategoryUseCaseTest {
 
     @Test
     void whenGetCategories_ThenReturnCategoriesWithSuccessfulPagination() {
-
         List<Category> categories = Arrays.asList(
                 new Category(1,"Category 1", "Description 1"),
                 new Category(2,"Category 2", "Description 2"),
@@ -93,6 +91,7 @@ class CategoryUseCaseTest {
 
     @Test
     void givenCategoriesAndLargerPage_whenGetCategories_thenReturnsPageOutOfBounds() {
+
         List<Category> categories = Arrays.asList(
                 new Category(2,"Category 2", "Description 2"),
                 new Category(1,"Category 1", "Description 1"),
@@ -104,6 +103,7 @@ class CategoryUseCaseTest {
         assertThrows(PageOutOfBoundsException.class, () -> {
             categoryUseCase.getCategories("asc", 5, 2);
         });
+
     }
 
     @Test
