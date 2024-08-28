@@ -12,10 +12,10 @@ import lombok.AllArgsConstructor;
 import java.util.Comparator;
 import java.util.List;
 
+import static com.pragma.emazon_stock.infrastructure.utils.Constants.DESC_COMPARATOR;
+
 @AllArgsConstructor
 public class CategoryUseCase implements CategoryServicePort {
-
-    public static final String DESC_COMPARATOR = "desc";
 
     private final CategoryPersistencePort categoryPersistencePort;
 

@@ -1,11 +1,8 @@
 package com.pragma.emazon_stock.infrastructure.configuration.exception.exceptionhandler;
 
-import com.pragma.emazon_stock.domain.exceptions.BrandAlreadyExistsException;
-import com.pragma.emazon_stock.domain.exceptions.NoContentCategoryException;
-import com.pragma.emazon_stock.domain.exceptions.PageOutOfBoundsException;
+import com.pragma.emazon_stock.domain.exceptions.*;
 import com.pragma.emazon_stock.infrastructure.configuration.exception.dto.PaginatedResponse;
 import com.pragma.emazon_stock.infrastructure.configuration.exception.dto.Response;
-import com.pragma.emazon_stock.domain.exceptions.CategoryAlreadyExistsException;
 import com.pragma.emazon_stock.infrastructure.utils.Constants;
 import org.springframework.context.MessageSourceResolvable;
 import org.springframework.http.HttpStatus;
@@ -72,6 +69,19 @@ public class ControllerAdvisor {
                 Response.builder()
                         .statusCode(HttpStatus.NO_CONTENT)
                         .message(Constants.CATEGORY_NO_CONTENT_MESSAGE)
+                        .build(),
+                HttpStatus.NO_CONTENT
+        );
+    }
+
+    @ExceptionHandler(NoContentBrandException.class)
+    public ResponseEntity<Response> handleNoContentBrandException(
+            NoContentBrandException noContentBrandException
+    ) {
+        return new ResponseEntity<>(
+                Response.builder()
+                        .statusCode(HttpStatus.NO_CONTENT)
+                        .message(Constants.BRAND_NO_CONTENT_MESSAGE)
                         .build(),
                 HttpStatus.NO_CONTENT
         );

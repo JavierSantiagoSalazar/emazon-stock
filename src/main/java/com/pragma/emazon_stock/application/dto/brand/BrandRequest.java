@@ -1,4 +1,4 @@
-package com.pragma.emazon_stock.application.dto;
+package com.pragma.emazon_stock.application.dto.brand;
 
 import com.pragma.emazon_stock.infrastructure.utils.Constants;
 import jakarta.validation.constraints.NotBlank;

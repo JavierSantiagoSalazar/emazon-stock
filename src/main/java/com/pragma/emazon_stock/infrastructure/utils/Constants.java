@@ -6,6 +6,8 @@ public class Constants {
         throw new IllegalStateException("Utility class");
     }
 
+    public static final String DESC_COMPARATOR = "desc";
+
     /* --- EXCEPTIONS CONSTANTS: CATEGORY --- */
 
     public static final String CATEGORY_ALREADY_EXISTS_EXCEPTION_MESSAGE = "The category already exists";
@@ -14,6 +16,7 @@ public class Constants {
     /* --- EXCEPTIONS CONSTANTS: BRAND --- */
 
     public static final String BRAND_ALREADY_EXISTS_EXCEPTION_MESSAGE = "The brand already exists";
+    public static final String BRAND_NO_CONTENT_MESSAGE = "There are currently no brands";
 
     /* --- VALIDATION CONSTANTS: CATEGORY--- */
 

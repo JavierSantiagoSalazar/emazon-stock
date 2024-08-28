@@ -1,7 +1,7 @@
 package com.pragma.emazon_stock.application.handler.category;
 
-import com.pragma.emazon_stock.application.dto.CategoryRequest;
-import com.pragma.emazon_stock.application.dto.CategoryResponse;
+import com.pragma.emazon_stock.application.dto.category.CategoryRequest;
+import com.pragma.emazon_stock.application.dto.category.CategoryResponse;
 import com.pragma.emazon_stock.domain.model.Pagination;
 
 public interface CategoryHandler {
