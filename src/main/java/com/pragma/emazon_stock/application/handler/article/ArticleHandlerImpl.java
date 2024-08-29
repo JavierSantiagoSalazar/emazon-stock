@@ -27,6 +27,7 @@ public class ArticleHandlerImpl implements ArticleHandler {
 
         articleRequest.setArticleName(articleRequest.getArticleName().trim().toUpperCase());
         articleRequest.setArticleDescription(articleRequest.getArticleDescription().trim());
+        articleRequest.setArticleBrand(articleRequest.getArticleBrand().trim().toUpperCase());
         articleRequest.setArticleCategories(normalizedCategories);
 
         articleServicePort.saveArticle(articleRequestMapper.toDomain(articleRequest));

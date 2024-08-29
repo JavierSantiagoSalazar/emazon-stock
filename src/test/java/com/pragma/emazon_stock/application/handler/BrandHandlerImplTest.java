@@ -13,6 +13,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -41,7 +42,7 @@ class BrandHandlerImplTest {
         brandRequest.setBrandName("  Nokia  ");
         brandRequest.setBrandDescription("  All nokia tech ");
 
-        Brand mappedBrand = new Brand(null, "NOKIA", "All nokia tech");
+        Brand mappedBrand = new Brand(null, "NOKIA", "All nokia tech", new ArrayList<>());
 
         when(brandRequestMapper.toDomain(brandRequest)).thenReturn(mappedBrand);
 
@@ -59,7 +60,7 @@ class BrandHandlerImplTest {
         Integer page = 1;
         Integer size = 10;
 
-        Brand brand = new Brand(1,"NOKIA", "All nokia tech");
+        Brand brand = new Brand(1,"NOKIA", "All nokia tech", new ArrayList<>());
         List<Brand> brandList = List.of(brand);
 
         Pagination<Brand> pagination = new Pagination<>(

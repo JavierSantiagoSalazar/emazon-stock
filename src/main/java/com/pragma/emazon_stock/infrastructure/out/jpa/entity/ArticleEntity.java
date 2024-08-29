@@ -31,6 +31,10 @@ public class ArticleEntity {
     @Column(name = "article_price", nullable = false)
     private Double articlePrice;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "brand_id", nullable = false)
+    private BrandEntity articleBrand;
+
     @ManyToMany
     @JoinTable(
             name = "article_categories",

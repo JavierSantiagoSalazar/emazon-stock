@@ -54,6 +54,7 @@ public class Constants {
     public static final String ARTICLE_PRICE_MUST_NOT_BE_NULL = "The article price must not be null";
     public static final String ARTICLE_PRICE_CANNOT_BE_NEGATIVE = "The article price can not be negative";
     public static final String ARTICLE_PRICE_MINIMAL_VALUE = "The article price can not be lower than 0.01";
+    public static final String ARTICLE_BRAND_MUST_NOT_BE_NULL = "The article brand must not be null";
     public static final String ARTICLE_CATEGORIES_MUST_NOT_BE_NULL = "The article categories must not be null";
 
     /* --- OPENAPI CONSTANTS --- */

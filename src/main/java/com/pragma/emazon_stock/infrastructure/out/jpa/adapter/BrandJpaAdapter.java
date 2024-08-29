@@ -1,5 +1,6 @@
 package com.pragma.emazon_stock.infrastructure.out.jpa.adapter;
 
+import com.pragma.emazon_stock.domain.exceptions.BrandDoesNotExistException;
 import com.pragma.emazon_stock.domain.model.Brand;
 import com.pragma.emazon_stock.domain.spi.BrandPersistencePort;
 import com.pragma.emazon_stock.infrastructure.out.jpa.entity.BrandEntity;
@@ -30,6 +31,15 @@ public class BrandJpaAdapter implements BrandPersistencePort {
 
         List<BrandEntity> brandEntityList = brandRepository.findAll();
         return brandEntityMapper.toBrandList(brandEntityList);
+    }
+
+    @Override
+    public Brand getBrandByName(String brandName) {
+
+        BrandEntity brandEntity = brandRepository.findByBrandName(brandName).orElseThrow(
+                () -> new BrandDoesNotExistException(brandName)
+        );
+        return brandEntityMapper.toDomain(brandEntity);
     }
 
 }

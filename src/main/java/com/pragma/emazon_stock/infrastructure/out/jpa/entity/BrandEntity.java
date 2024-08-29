@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity
 @Table(name = "brand")
 @Data
@@ -22,5 +24,8 @@ public class BrandEntity {
 
     @Column(name = "brand_description", nullable = false ,length = 120)
     private String brandDescription;
+
+    @OneToMany(mappedBy = "articleBrand", cascade = CascadeType.ALL)
+    private List<ArticleEntity> brandArticles;
 
 }

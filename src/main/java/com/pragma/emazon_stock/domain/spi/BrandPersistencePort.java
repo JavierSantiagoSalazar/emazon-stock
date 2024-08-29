@@ -12,4 +12,6 @@ public interface BrandPersistencePort {
 
     List<Brand> getAllBrands();
 
+    Brand getBrandByName(String brandName);
+
 }

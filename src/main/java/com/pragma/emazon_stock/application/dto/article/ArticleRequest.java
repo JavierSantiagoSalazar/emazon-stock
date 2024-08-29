@@ -30,6 +30,9 @@ public class ArticleRequest {
     @DecimalMin(value = "0.01", message = Constants.ARTICLE_PRICE_MINIMAL_VALUE)
     private Double articlePrice;
 
+    @NotNull(message = Constants.ARTICLE_BRAND_MUST_NOT_BE_NULL)
+    private String articleBrand;
+
     @NotNull(message = Constants.ARTICLE_CATEGORIES_MUST_NOT_BE_NULL)
     private List<String> articleCategories;
 

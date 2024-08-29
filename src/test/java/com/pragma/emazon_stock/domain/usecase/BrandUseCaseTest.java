@@ -63,9 +63,9 @@ class BrandUseCaseTest {
     @Test
     void whenGetBrands_ThenReturnBrandsWithSuccessfulPagination() {
         List<Brand> brands = Arrays.asList(
-                new Brand(1,"Brand 1", "Description 1"),
-                new Brand(2,"Brand 2", "Description 2"),
-                new Brand(3,"Brand 3", "Description 3")
+                new Brand(1,"Brand 1", "Description 1", null),
+                new Brand(2,"Brand 2", "Description 2", null),
+                new Brand(3,"Brand 3", "Description 3", null)
         );
 
         when(brandPersistencePort.getAllBrands()).thenReturn(brands);
@@ -95,9 +95,9 @@ class BrandUseCaseTest {
     void givenBrandsAndLargerPage_whenGetBrands_thenReturnsPageOutOfBounds() {
 
         List<Brand> brands = Arrays.asList(
-                new Brand(2,"Brand 2", "Description 2"),
-                new Brand(1,"Brand 1", "Description 1"),
-                new Brand(3,"Brand 3", "Description 3")
+                new Brand(2,"Brand 2", "Description 2", null),
+                new Brand(1,"Brand 1", "Description 1", null),
+                new Brand(3,"Brand 3", "Description 3", null)
         );
 
         when(brandPersistencePort.getAllBrands()).thenReturn(brands);
@@ -112,9 +112,9 @@ class BrandUseCaseTest {
     void givenBrandsAndDescOrder_whenGetBrands_thenReturnsBrandsListInDescendingOrder() {
 
         List<Brand> brands = Arrays.asList(
-                new Brand(1, "Brand 1", "Description 1"),
-                new Brand(2, "Brand 2", "Description 2"),
-                new Brand(3, "Brand 3", "Description 3")
+                new Brand(1, "Brand 1", "Description 1", null),
+                new Brand(2, "Brand 2", "Description 2", null),
+                new Brand(3, "Brand 3", "Description 3", null)
         );
 
         when(brandPersistencePort.getAllBrands()).thenReturn(brands);

@@ -80,10 +80,10 @@ class BrandJpaAdapterTest {
     @Test
     void whenGetAllBrands_thenReturnBrandsList() {
 
-        BrandEntity brandEntity = new BrandEntity(1, "NOKIA", "Description");
+        BrandEntity brandEntity = new BrandEntity(1, "NOKIA", "Description", null);
         List<BrandEntity> brandEntityList = List.of(brandEntity);
 
-        Brand brand = new Brand(1, "NOKIA", "Description");
+        Brand brand = new Brand(1, "NOKIA", "Description", null);
         List<Brand> brandList = List.of(brand);
 
         when(brandRepository.findAll()).thenReturn(brandEntityList);

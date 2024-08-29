@@ -1,12 +1,10 @@
 package com.pragma.emazon_stock.domain.usecase;
 
-import com.pragma.emazon_stock.domain.exceptions.ArticleAlreadyExistsException;
-import com.pragma.emazon_stock.domain.exceptions.ArticleCategoryOutOfBoundsException;
-import com.pragma.emazon_stock.domain.exceptions.CategoryDoesNotExistException;
-import com.pragma.emazon_stock.domain.exceptions.NotUniqueArticleCategoriesException;
+import com.pragma.emazon_stock.domain.exceptions.*;
 import com.pragma.emazon_stock.domain.model.Article;
 import com.pragma.emazon_stock.domain.model.Category;
 import com.pragma.emazon_stock.domain.spi.ArticlePersistencePort;
+import com.pragma.emazon_stock.domain.spi.BrandPersistencePort;
 import com.pragma.emazon_stock.domain.spi.CategoryPersistencePort;
 import com.pragma.emazon_stock.utils.ModelsTestFactory;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,6 +26,8 @@ class ArticleUseCaseTest {
     private ArticlePersistencePort articlePersistencePort;
     @Mock
     private CategoryPersistencePort categoryPersistencePort;
+    @Mock
+    private BrandPersistencePort brandPersistencePort;
 
     @InjectMocks
     private ArticleUseCase articleUseCase;
@@ -43,11 +43,13 @@ class ArticleUseCaseTest {
     void givenArticleDoesNotExist_whenSaveArticleIsCalled_thenArticleIsSaved() {
 
         when(articlePersistencePort.checkIfArticleExists(defaultArticle.getArticleName())).thenReturn(false);
+        when(brandPersistencePort.getBrandByName(defaultArticle.getArticleBrand().getBrandName())).thenReturn(defaultArticle.getArticleBrand());
         when(categoryPersistencePort.getAllCategoriesByName(anyList())).thenReturn(defaultArticle.getArticleCategories());
 
         articleUseCase.saveArticle(defaultArticle);
 
         verify(articlePersistencePort, times(1)).checkIfArticleExists(defaultArticle.getArticleName());
+        verify(brandPersistencePort, times(1)).getBrandByName(defaultArticle.getArticleBrand().getBrandName());
         verify(categoryPersistencePort, times(1)).getAllCategoriesByName(anyList());
         verify(articlePersistencePort, times(1)).saveArticle(defaultArticle);
 
@@ -79,6 +81,7 @@ class ArticleUseCaseTest {
         assertThrows(NotUniqueArticleCategoriesException.class, () -> articleUseCase.saveArticle(defaultArticle));
 
         verify(articlePersistencePort, times(1)).checkIfArticleExists(defaultArticle.getArticleName());
+        verify(brandPersistencePort, never()).getBrandByName(any());
         verify(categoryPersistencePort, never()).getAllCategoriesByName(anyList());
         verify(articlePersistencePort, never()).saveArticle(defaultArticle);
     }
@@ -98,6 +101,7 @@ class ArticleUseCaseTest {
         assertThrows(ArticleCategoryOutOfBoundsException.class, () -> articleUseCase.saveArticle(defaultArticle));
 
         verify(articlePersistencePort, times(1)).checkIfArticleExists(defaultArticle.getArticleName());
+        verify(brandPersistencePort, never()).getBrandByName(any());
         verify(categoryPersistencePort, never()).getAllCategoriesByName(anyList());
         verify(articlePersistencePort, never()).saveArticle(defaultArticle);
     }
@@ -106,12 +110,31 @@ class ArticleUseCaseTest {
     void givenNonExistentCategories_whenSaveArticleIsCalled_thenThrowsException() {
 
         when(articlePersistencePort.checkIfArticleExists(defaultArticle.getArticleName())).thenReturn(false);
-        when(categoryPersistencePort.getAllCategoriesByName(anyList())).thenThrow(new CategoryDoesNotExistException(List.of("CATEGORY3")));
+        when(categoryPersistencePort.getAllCategoriesByName(anyList())).thenThrow(
+                new CategoryDoesNotExistException(List.of("CATEGORY3"))
+        );
 
         assertThrows(CategoryDoesNotExistException.class, () -> articleUseCase.saveArticle(defaultArticle));
 
         verify(articlePersistencePort, times(1)).checkIfArticleExists(defaultArticle.getArticleName());
         verify(categoryPersistencePort, times(1)).getAllCategoriesByName(anyList());
+        verify(articlePersistencePort, never()).saveArticle(defaultArticle);
+    }
+
+    @Test
+    void givenNonExistentBrand_whenSaveArticleIsCalled_thenThrowsException() {
+
+        when(articlePersistencePort.checkIfArticleExists(defaultArticle.getArticleName())).thenReturn(false);
+        when(brandPersistencePort.getBrandByName(defaultArticle.getArticleBrand().getBrandName())).thenThrow(
+                new BrandDoesNotExistException("HP")
+        );
+        when(categoryPersistencePort.getAllCategoriesByName(anyList())).thenReturn(defaultArticle.getArticleCategories());
+
+        assertThrows(BrandDoesNotExistException.class, () -> articleUseCase.saveArticle(defaultArticle));
+
+        verify(articlePersistencePort, times(1)).checkIfArticleExists(defaultArticle.getArticleName());
+        verify(brandPersistencePort, times(1)).getBrandByName(defaultArticle.getArticleBrand().getBrandName());
+        verify(categoryPersistencePort, never()).getAllCategoriesByName(anyList());
         verify(articlePersistencePort, never()).saveArticle(defaultArticle);
     }
 

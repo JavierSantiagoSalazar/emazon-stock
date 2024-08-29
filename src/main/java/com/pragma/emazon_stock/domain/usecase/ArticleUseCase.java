@@ -5,8 +5,10 @@ import com.pragma.emazon_stock.domain.exceptions.ArticleAlreadyExistsException;
 import com.pragma.emazon_stock.domain.exceptions.ArticleCategoryOutOfBoundsException;
 import com.pragma.emazon_stock.domain.exceptions.NotUniqueArticleCategoriesException;
 import com.pragma.emazon_stock.domain.model.Article;
+import com.pragma.emazon_stock.domain.model.Brand;
 import com.pragma.emazon_stock.domain.model.Category;
 import com.pragma.emazon_stock.domain.spi.ArticlePersistencePort;
+import com.pragma.emazon_stock.domain.spi.BrandPersistencePort;
 import com.pragma.emazon_stock.domain.spi.CategoryPersistencePort;
 import lombok.AllArgsConstructor;
 
@@ -17,6 +19,7 @@ public class ArticleUseCase implements ArticleServicePort {
 
     private final ArticlePersistencePort articlePersistencePort;
     private final CategoryPersistencePort categoryPersistencePort;
+    private final BrandPersistencePort brandPersistencePort;
 
     @Override
     public void saveArticle(Article article) {
@@ -31,8 +34,10 @@ public class ArticleUseCase implements ArticleServicePort {
 
         validateCategoryNames(categoryNames);
 
+        Brand brand = brandPersistencePort.getBrandByName(article.getArticleBrand().getBrandName());
         List<Category> categoryList = categoryPersistencePort.getAllCategoriesByName(categoryNames);
 
+        article.setArticleBrand(brand);
         article.setArticleCategories(categoryList);
         articlePersistencePort.saveArticle(article);
     }

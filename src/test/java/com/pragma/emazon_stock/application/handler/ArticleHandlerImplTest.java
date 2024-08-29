@@ -5,12 +5,14 @@ import com.pragma.emazon_stock.application.handler.article.ArticleHandlerImpl;
 import com.pragma.emazon_stock.application.mappers.article.ArticleRequestMapper;
 import com.pragma.emazon_stock.domain.api.ArticleServicePort;
 import com.pragma.emazon_stock.domain.model.Article;
+import com.pragma.emazon_stock.domain.model.Brand;
 import com.pragma.emazon_stock.domain.model.Category;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import static org.mockito.Mockito.*;
@@ -36,6 +38,7 @@ class ArticleHandlerImplTest {
         articleRequest.setArticleAmount(10);
         articleRequest.setArticlePrice(100.0);
         articleRequest.setArticleCategories(Arrays.asList("  Category1  ", "  Category2  "));
+        articleRequest.setArticleBrand("HP");
 
         Article mappedArticle = new Article(
                 null,
@@ -43,6 +46,7 @@ class ArticleHandlerImplTest {
                 "A great article",
                 10,
                 100.0,
+                new Brand(1, "HP", "HP items", new ArrayList<>()),
                 Arrays.asList(
                         new Category(null, "CATEGORY1", null),
                         new Category(null,"CATEGORY2", null)

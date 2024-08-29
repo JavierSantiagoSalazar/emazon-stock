@@ -7,6 +7,7 @@ import com.pragma.emazon_stock.infrastructure.out.jpa.entity.ArticleEntity;
 import com.pragma.emazon_stock.infrastructure.out.jpa.entity.BrandEntity;
 import com.pragma.emazon_stock.infrastructure.out.jpa.entity.CategoryEntity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ModelsTestFactory {
@@ -20,11 +21,11 @@ public class ModelsTestFactory {
     }
 
     public static Brand createDefaultBrand() {
-        return new Brand(1, "NOKIA", "All nokia tech");
+        return new Brand(1, "NOKIA", "All nokia tech", new ArrayList<>());
     }
 
     public static BrandEntity createDefaultBrandEntity() {
-        return new BrandEntity(1, "NOKIA", "All nokia tech");
+        return new BrandEntity(1, "NOKIA", "All nokia tech", new ArrayList<>());
     }
 
     public static Article createDefaultArticle() {
@@ -35,6 +36,7 @@ public class ModelsTestFactory {
                 "A good pc",
                 1,
                 10.0,
+                new Brand(1, "HP", "HP items", null),
                 List.of(new Category(1, "GAMING", "Gaming items"))
         );
     }
@@ -46,6 +48,7 @@ public class ModelsTestFactory {
                 "A good pc",
                 1,
                 10.0,
+                new BrandEntity(1, "HP", "HP items", null),
                 List.of(new CategoryEntity(1, "GAMING", "Gaming items"))
         );
     }

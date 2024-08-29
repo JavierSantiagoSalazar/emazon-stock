@@ -55,6 +55,19 @@ public class ControllerAdvisor {
         );
     }
 
+    @ExceptionHandler(BrandDoesNotExistException.class)
+    public ResponseEntity<Response> handleBrandDoesNotExistException(
+            BrandDoesNotExistException brandDoesNotExistException
+    ) {
+        return new ResponseEntity<>(
+                Response.builder()
+                        .statusCode(HttpStatus.UNPROCESSABLE_ENTITY)
+                        .message(brandDoesNotExistException.getMessage())
+                        .build(),
+                HttpStatus.UNPROCESSABLE_ENTITY
+        );
+    }
+
     @ExceptionHandler(ArticleAlreadyExistsException.class)
     public ResponseEntity<Response> handleArticleAlreadyExistsException(
             ArticleAlreadyExistsException articleAlreadyExistsException

@@ -50,6 +50,7 @@ class ArticleRestControllerTest {
         articleRequest.setArticleAmount(100);
         articleRequest.setArticlePrice(999.99);
         articleRequest.setArticleCategories(Arrays.asList("Technology", "Mobile"));
+        articleRequest.setArticleBrand("Apple");
     }
 
     @Test
