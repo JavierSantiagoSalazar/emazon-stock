@@ -1,9 +1,13 @@
 package com.pragma.emazon_stock.utils;
 
+import com.pragma.emazon_stock.domain.model.Article;
 import com.pragma.emazon_stock.domain.model.Brand;
 import com.pragma.emazon_stock.domain.model.Category;
+import com.pragma.emazon_stock.infrastructure.out.jpa.entity.ArticleEntity;
 import com.pragma.emazon_stock.infrastructure.out.jpa.entity.BrandEntity;
 import com.pragma.emazon_stock.infrastructure.out.jpa.entity.CategoryEntity;
+
+import java.util.List;
 
 public class ModelsTestFactory {
 
@@ -21,6 +25,29 @@ public class ModelsTestFactory {
 
     public static BrandEntity createDefaultBrandEntity() {
         return new BrandEntity(1, "NOKIA", "All nokia tech");
+    }
+
+    public static Article createDefaultArticle() {
+
+        return new Article(
+                1,
+                "PC",
+                "A good pc",
+                1,
+                10.0,
+                List.of(new Category(1, "GAMING", "Gaming items"))
+        );
+    }
+
+    public static ArticleEntity createDefaultArticleEntity() {
+        return new ArticleEntity(
+                1,
+                "PC",
+                "A good pc",
+                1,
+                10.0,
+                List.of(new CategoryEntity(1, "GAMING", "Gaming items"))
+        );
     }
 
 }

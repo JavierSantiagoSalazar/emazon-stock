@@ -15,6 +15,7 @@ public class CategoryRequest {
     @NotNull(message = Constants.CATEGORY_NAME_MUST_NOT_BE_NULL)
     @Size(max = 50, message = Constants.CATEGORY_NAME_LENGTH_EXCEEDED)
     private String name;
+
     @NotBlank(message = Constants.CATEGORY_DESCRIPTION_MUST_NOT_BE_BLANK)
     @NotNull(message = Constants.CATEGORY_DESCRIPTION_MUST_NOT_BE_NULL)
     @Size(max = 90, message = Constants.CATEGORY_DESCRIPTION_LENGTH_EXCEEDED)

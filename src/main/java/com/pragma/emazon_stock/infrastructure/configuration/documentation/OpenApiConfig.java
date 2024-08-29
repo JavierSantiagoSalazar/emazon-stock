@@ -24,7 +24,6 @@ public class OpenApiConfig {
                         .termsOfService(Constants.OPEN_API_TERMS)
                         .license(new License().name(Constants.OPEN_API_LICENCE_NAME).url(Constants.OPEN_API_LICENCE_URL))
                 );
-
     }
 
 }

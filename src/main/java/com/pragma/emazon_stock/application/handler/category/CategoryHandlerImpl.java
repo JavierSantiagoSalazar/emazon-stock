@@ -30,7 +30,6 @@ public class CategoryHandlerImpl implements CategoryHandler {
         categoryRequest.setDescription(categoryRequest.getDescription().trim());
 
         categoryServicePort.saveCategory(categoryRequestMapper.toDomain(categoryRequest));
-
     }
 
     @Override
@@ -50,7 +49,6 @@ public class CategoryHandlerImpl implements CategoryHandler {
                 paginationCategories.getTotalPages(),
                 paginationCategories.getIsLastPage()
         );
-
     }
 
 }

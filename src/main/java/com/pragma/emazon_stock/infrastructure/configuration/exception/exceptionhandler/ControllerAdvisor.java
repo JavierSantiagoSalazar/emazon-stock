@@ -29,6 +29,19 @@ public class ControllerAdvisor {
         );
     }
 
+    @ExceptionHandler(CategoryDoesNotExistException.class)
+    public ResponseEntity<Response> handleCategoryDoesNotExistException(
+            CategoryDoesNotExistException categoryDoesNotExistException
+    ) {
+        return new ResponseEntity<>(
+                Response.builder()
+                        .statusCode(HttpStatus.UNPROCESSABLE_ENTITY)
+                        .message(categoryDoesNotExistException.getMessage())
+                        .build(),
+                HttpStatus.UNPROCESSABLE_ENTITY
+        );
+    }
+
     @ExceptionHandler(BrandAlreadyExistsException.class)
     public ResponseEntity<Response> handleBrandAlreadyExistsException(
             BrandAlreadyExistsException brandAlreadyExistsException
@@ -41,6 +54,46 @@ public class ControllerAdvisor {
                 HttpStatus.CONFLICT
         );
     }
+
+    @ExceptionHandler(ArticleAlreadyExistsException.class)
+    public ResponseEntity<Response> handleArticleAlreadyExistsException(
+            ArticleAlreadyExistsException articleAlreadyExistsException
+    ) {
+        return new ResponseEntity<>(
+                Response.builder()
+                        .statusCode(HttpStatus.CONFLICT)
+                        .message(Constants.ARTICLE_ALREADY_EXISTS_EXCEPTION_MESSAGE)
+                        .build(),
+                HttpStatus.CONFLICT
+        );
+    }
+
+    @ExceptionHandler(NotUniqueArticleCategoriesException.class)
+    public ResponseEntity<Response> handleNotUniqueArticleCategoriesException(
+            NotUniqueArticleCategoriesException notUniqueArticleCategoriesException
+    ) {
+        return new ResponseEntity<>(
+                Response.builder()
+                        .statusCode(HttpStatus.BAD_REQUEST)
+                        .message(Constants.ARTICLE_CATEGORIES_NOT_UNIQUE_MESSAGE)
+                        .build(),
+                HttpStatus.BAD_REQUEST
+        );
+    }
+
+    @ExceptionHandler(ArticleCategoryOutOfBoundsException.class)
+    public ResponseEntity<Response> handleArticleCategoryOutOfBoundsException(
+            ArticleCategoryOutOfBoundsException articleCategoryOutOfBoundsException
+    ) {
+        return new ResponseEntity<>(
+                Response.builder()
+                        .statusCode(HttpStatus.BAD_REQUEST)
+                        .message(Constants.ARTICLE_CATEGORIES_OUT_OF_BOUNDS_MESSAGE)
+                        .build(),
+                HttpStatus.BAD_REQUEST
+        );
+    }
+
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Response> handleMethodArgumentNotValidException(

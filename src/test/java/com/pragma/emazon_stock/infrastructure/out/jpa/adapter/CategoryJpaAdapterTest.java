@@ -1,5 +1,6 @@
 package com.pragma.emazon_stock.infrastructure.out.jpa.adapter;
 
+import com.pragma.emazon_stock.domain.exceptions.CategoryDoesNotExistException;
 import com.pragma.emazon_stock.domain.model.Category;
 import com.pragma.emazon_stock.infrastructure.out.jpa.entity.CategoryEntity;
 import com.pragma.emazon_stock.infrastructure.out.jpa.mapper.CategoryEntityMapper;
@@ -95,6 +96,56 @@ class CategoryJpaAdapterTest {
         verify(categoryRepository, times(1)).findAll();
 
         verify(categoryEntityMapper, times(1)).toCategoryList(categoryEntityList);
+    }
+
+    @Test
+    void givenCategoriesExist_whenGetAllCategoriesByName_thenReturnCategoryList() {
+
+        List<String> categoriesName = List.of("HOME", "ELECTRONICS");
+        List<CategoryEntity> categoryEntities = List.of(
+                new CategoryEntity(1, "HOME", "Home Description"),
+                new CategoryEntity(2, "ELECTRONICS", "Electronics Description")
+        );
+
+        List<Category> categories = List.of(
+                new Category(1, "HOME", "Home Description"),
+                new Category(2, "ELECTRONICS", "Electronics Description")
+        );
+
+        when(categoryRepository.findByNameIn(categoriesName)).thenReturn(categoryEntities);
+        when(categoryEntityMapper.toDomain(categoryEntities.get(0))).thenReturn(categories.get(0));
+        when(categoryEntityMapper.toDomain(categoryEntities.get(1))).thenReturn(categories.get(1));
+
+        List<Category> result = categoryJpaAdapter.getAllCategoriesByName(categoriesName);
+
+        assertEquals(2, result.size());
+        assertEquals("HOME", result.get(0).getName());
+        assertEquals("ELECTRONICS", result.get(1).getName());
+
+        verify(categoryRepository, times(1)).findByNameIn(categoriesName);
+        verify(categoryEntityMapper, times(1)).toDomain(categoryEntities.get(0));
+        verify(categoryEntityMapper, times(1)).toDomain(categoryEntities.get(1));
+    }
+
+    @Test
+    void givenSomeCategoriesDoNotExist_whenGetAllCategoriesByName_thenThrowCategoryDoesNotExistException() {
+        List<String> categoryNames = List.of("CATEGORY1", "CATEGORY2", "CATEGORY3");
+        List<CategoryEntity> categoryEntities = List.of(
+                new CategoryEntity(1, "CATEGORY1", "Description1"),
+                new CategoryEntity(2, "CATEGORY2", "Description2")
+        );
+
+        when(categoryRepository.findByNameIn(categoryNames)).thenReturn(categoryEntities);
+
+        CategoryDoesNotExistException thrownException = assertThrows(
+                CategoryDoesNotExistException.class,
+                () -> categoryJpaAdapter.getAllCategoriesByName(categoryNames)
+        );
+
+        assertTrue(thrownException.getMessage().contains("CATEGORY3"));
+
+        verify(categoryRepository, times(1)).findByNameIn(categoryNames);
+        verify(categoryEntityMapper, times(0)).toDomain(any(CategoryEntity.class));
     }
 
 }

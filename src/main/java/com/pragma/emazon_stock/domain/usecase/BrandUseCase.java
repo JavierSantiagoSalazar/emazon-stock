@@ -21,9 +21,11 @@ public class BrandUseCase implements BrandServicePort {
 
     @Override
     public void saveBrand(Brand brand) {
+
         if (checkIfBrandExists(brand.getBrandName())) {
             throw new BrandAlreadyExistsException();
         }
+
         brandPersistencePort.saveBrand(brand);
     }
 
@@ -34,6 +36,7 @@ public class BrandUseCase implements BrandServicePort {
 
     @Override
     public Pagination<Brand> getBrands(String sortOrder, Integer page, Integer size) {
+
         List<Brand> brandList = brandPersistencePort.getAllBrands();
 
         if (DESC_COMPARATOR.equalsIgnoreCase(sortOrder)) {

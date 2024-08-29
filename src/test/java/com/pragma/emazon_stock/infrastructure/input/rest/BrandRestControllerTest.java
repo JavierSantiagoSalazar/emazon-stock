@@ -70,7 +70,6 @@ class BrandRestControllerTest {
                         .content(objectMapper.writeValueAsString(brandRequest)))
                 .andExpect(status().isCreated())
                 .andExpect(MockMvcResultMatchers.header().exists("Location"));
-
     }
 
     @Test
@@ -84,7 +83,6 @@ class BrandRestControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(brandRequest)))
                 .andExpect(status().isBadRequest());
-
     }
 
     @Test
@@ -96,7 +94,6 @@ class BrandRestControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(brandRequest)))
                 .andExpect(status().isConflict());
-
     }
 
     @Test
@@ -112,7 +109,6 @@ class BrandRestControllerTest {
                 .andExpect(jsonPath("$.message").value(
                         "[The length of the name cannot exceed 50 characters]"
                 ));
-
     }
 
     @Test
@@ -128,7 +124,6 @@ class BrandRestControllerTest {
                 .andExpect(jsonPath("$.message").value(
                         "[The length of the description cannot exceed 120 characters]"
                 ));
-
     }
 
     @Test
@@ -174,7 +169,6 @@ class BrandRestControllerTest {
                 .andExpect(jsonPath("$.totalItems").value(1))
                 .andExpect(jsonPath("$.totalPages").value(1))
                 .andExpect(jsonPath("$.isLastPage").value(true));
-
     }
 
     @Test
@@ -205,7 +199,6 @@ class BrandRestControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.items[0].brandName").value("HP"))
                 .andExpect(jsonPath("$.items[1].brandName").value("NOKIA"));
-
     }
 
     @Test
@@ -236,7 +229,6 @@ class BrandRestControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.items[0].brandName").value("NOKIA"))
                 .andExpect(jsonPath("$.items[1].brandName").value("HP"));
-
     }
 
     @Test

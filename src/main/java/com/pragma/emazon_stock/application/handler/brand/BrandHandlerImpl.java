@@ -30,7 +30,6 @@ public class BrandHandlerImpl implements BrandHandler {
         brandRequest.setBrandDescription(brandRequest.getBrandDescription().trim());
 
         brandServicePort.saveBrand(brandRequestMapper.toDomain(brandRequest));
-
     }
 
     @Override
@@ -50,7 +49,6 @@ public class BrandHandlerImpl implements BrandHandler {
                 paginationBrands.getTotalPages(),
                 paginationBrands.getIsLastPage()
         );
-
     }
 
 }
