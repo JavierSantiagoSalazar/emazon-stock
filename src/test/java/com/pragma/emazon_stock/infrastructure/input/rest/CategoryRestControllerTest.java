@@ -57,7 +57,6 @@ class CategoryRestControllerTest {
         categoryResponse.setId(1);
         categoryResponse.setName("HOME");
         categoryResponse.setDescription("All things related with home");
-
     }
 
     @Test
@@ -70,7 +69,6 @@ class CategoryRestControllerTest {
                         .content(objectMapper.writeValueAsString(categoryRequest)))
                 .andExpect(status().isCreated())
                 .andExpect(MockMvcResultMatchers.header().exists("Location"));
-
     }
 
     @Test
@@ -84,7 +82,6 @@ class CategoryRestControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(categoryRequest)))
                 .andExpect(status().isBadRequest());
-
     }
 
     @Test
@@ -96,7 +93,6 @@ class CategoryRestControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(categoryRequest)))
                 .andExpect(status().isConflict());
-
     }
 
     @Test
@@ -112,7 +108,6 @@ class CategoryRestControllerTest {
                 .andExpect(jsonPath("$.message").value(
                         "[The length of the name cannot exceed 50 characters]"
                 ));
-
     }
 
     @Test
@@ -128,7 +123,6 @@ class CategoryRestControllerTest {
                 .andExpect(jsonPath("$.message").value(
                         "[The length of the description cannot exceed 90 characters]"
                 ));
-
     }
 
     @Test
@@ -144,7 +138,6 @@ class CategoryRestControllerTest {
                 .andExpect(jsonPath("$.statusCode").value(HttpStatus.BAD_REQUEST.name()))
                 .andExpect(jsonPath("$.message").value(containsString("The length of the name cannot exceed 50 characters")))
                 .andExpect(jsonPath("$.message").value(containsString("The length of the description cannot exceed 90 characters")));
-
     }
 
     @Test
@@ -174,7 +167,6 @@ class CategoryRestControllerTest {
                 .andExpect(jsonPath("$.totalItems").value(1))
                 .andExpect(jsonPath("$.totalPages").value(1))
                 .andExpect(jsonPath("$.isLastPage").value(true));
-
     }
 
     @Test
@@ -205,7 +197,6 @@ class CategoryRestControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.items[0].name").value("BOOKS"))
                 .andExpect(jsonPath("$.items[1].name").value("HOME"));
-
     }
 
     @Test
@@ -236,7 +227,6 @@ class CategoryRestControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.items[0].name").value("WALLPAPER"))
                 .andExpect(jsonPath("$.items[1].name").value("HOME"));
-
     }
 
     @Test

@@ -21,19 +21,23 @@ public class CategoryUseCase implements CategoryServicePort {
 
     @Override
     public void saveCategory(Category category) {
+
         if (checkIfCategoryExists(category.getName())) {
             throw new CategoryAlreadyExistsException();
         }
+
         categoryPersistencePort.saveCategory(category);
     }
 
     @Override
     public boolean checkIfCategoryExists(String categoryName) {
+
         return categoryPersistencePort.checkIfCategoryExists(categoryName);
     }
 
     @Override
     public Pagination<Category> getCategories(String sortOrder, Integer page, Integer size) {
+
         List<Category> categoryList = categoryPersistencePort.getAllCategories();
 
         if (DESC_COMPARATOR.equalsIgnoreCase(sortOrder)) {

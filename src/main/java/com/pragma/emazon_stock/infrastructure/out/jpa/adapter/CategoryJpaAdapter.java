@@ -1,5 +1,6 @@
 package com.pragma.emazon_stock.infrastructure.out.jpa.adapter;
 
+import com.pragma.emazon_stock.domain.exceptions.CategoryDoesNotExistException;
 import com.pragma.emazon_stock.domain.model.Category;
 import com.pragma.emazon_stock.domain.spi.CategoryPersistencePort;
 import com.pragma.emazon_stock.infrastructure.out.jpa.entity.CategoryEntity;
@@ -27,8 +28,31 @@ public class CategoryJpaAdapter implements CategoryPersistencePort {
 
     @Override
     public List<Category> getAllCategories() {
+
         List<CategoryEntity> categoryEntityList = categoryRepository.findAll();
         return categoryEntityMapper.toCategoryList(categoryEntityList);
+    }
+
+    @Override
+    public List<Category> getAllCategoriesByName(List<String> categoriesName) {
+
+        List<CategoryEntity> categoryEntities = categoryRepository.findByNameIn(categoriesName);
+
+        List<String> foundCategoryNames = categoryEntities.stream()
+                .map(CategoryEntity::getName)
+                .toList();
+
+        List<String> missingCategories = categoriesName.stream()
+                .filter(name -> !foundCategoryNames.contains(name))
+                .toList();
+
+        if (!missingCategories.isEmpty()) {
+            throw new CategoryDoesNotExistException(missingCategories);
+        }
+
+        return categoryEntities.stream()
+                .map(categoryEntityMapper::toDomain)
+                .toList();
     }
 
 }

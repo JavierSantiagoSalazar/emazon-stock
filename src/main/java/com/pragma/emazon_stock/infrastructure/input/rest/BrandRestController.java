@@ -32,6 +32,7 @@ public class BrandRestController {
     })
     @PostMapping("/")
     public ResponseEntity<Void> createBrand(@Valid @RequestBody BrandRequest brandRequest) {
+
         brandHandler.createBrand(brandRequest);
 
         URI location = ServletUriComponentsBuilder

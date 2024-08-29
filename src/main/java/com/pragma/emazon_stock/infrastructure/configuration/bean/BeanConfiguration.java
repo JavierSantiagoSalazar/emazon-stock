@@ -1,15 +1,21 @@
 package com.pragma.emazon_stock.infrastructure.configuration.bean;
 
+import com.pragma.emazon_stock.domain.api.ArticleServicePort;
 import com.pragma.emazon_stock.domain.api.BrandServicePort;
 import com.pragma.emazon_stock.domain.api.CategoryServicePort;
+import com.pragma.emazon_stock.domain.spi.ArticlePersistencePort;
 import com.pragma.emazon_stock.domain.spi.BrandPersistencePort;
 import com.pragma.emazon_stock.domain.spi.CategoryPersistencePort;
+import com.pragma.emazon_stock.domain.usecase.ArticleUseCase;
 import com.pragma.emazon_stock.domain.usecase.BrandUseCase;
 import com.pragma.emazon_stock.domain.usecase.CategoryUseCase;
+import com.pragma.emazon_stock.infrastructure.out.jpa.adapter.ArticleJpaAdapter;
 import com.pragma.emazon_stock.infrastructure.out.jpa.adapter.BrandJpaAdapter;
 import com.pragma.emazon_stock.infrastructure.out.jpa.adapter.CategoryJpaAdapter;
+import com.pragma.emazon_stock.infrastructure.out.jpa.mapper.ArticleEntityMapper;
 import com.pragma.emazon_stock.infrastructure.out.jpa.mapper.BrandEntityMapper;
 import com.pragma.emazon_stock.infrastructure.out.jpa.mapper.CategoryEntityMapper;
+import com.pragma.emazon_stock.infrastructure.out.jpa.repository.ArticleRepository;
 import com.pragma.emazon_stock.infrastructure.out.jpa.repository.BrandRepository;
 import com.pragma.emazon_stock.infrastructure.out.jpa.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +31,9 @@ public class BeanConfiguration {
 
     private final BrandRepository brandRepository;
     private final BrandEntityMapper brandEntityMapper;
+
+    private final ArticleRepository articleRepository;
+    private final ArticleEntityMapper articleEntityMapper;
 
     @Bean
     public CategoryPersistencePort categoryPersistencePort() {
@@ -44,6 +53,16 @@ public class BeanConfiguration {
     @Bean
     public BrandServicePort brandServicePort() {
         return new BrandUseCase(brandPersistencePort());
+    }
+
+    @Bean
+    public ArticlePersistencePort articlePersistencePort() {
+        return new ArticleJpaAdapter(articleRepository, articleEntityMapper);
+    }
+
+    @Bean
+    public ArticleServicePort articleServicePort() {
+        return new ArticleUseCase(articlePersistencePort(), categoryPersistencePort());
     }
 
 }

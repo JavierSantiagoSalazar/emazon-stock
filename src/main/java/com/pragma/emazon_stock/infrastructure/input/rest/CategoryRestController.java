@@ -32,6 +32,7 @@ public class CategoryRestController {
     })
     @PostMapping("/")
     public ResponseEntity<Void> createCategory(@Valid @RequestBody CategoryRequest categoryRequest) {
+
         categoryHandler.createCategory(categoryRequest);
 
         URI location = ServletUriComponentsBuilder

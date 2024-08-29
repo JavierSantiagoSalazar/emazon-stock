@@ -15,6 +15,7 @@ public class BrandRequest {
     @NotNull(message = Constants.BRAND_NAME_MUST_NOT_BE_NULL)
     @Size(max = 50, message = Constants.BRAND_NAME_LENGTH_EXCEEDED)
     private String brandName;
+
     @NotBlank(message = Constants.BRAND_DESCRIPTION_MUST_NOT_BE_BLANK)
     @NotNull(message = Constants.BRAND_DESCRIPTION_MUST_NOT_BE_NULL)
     @Size(max = 120, message = Constants.BRAND_DESCRIPTION_LENGTH_EXCEEDED)
