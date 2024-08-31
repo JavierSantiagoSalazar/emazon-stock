@@ -40,14 +40,14 @@ public class CategoryUseCase implements CategoryServicePort {
 
         List<Category> categoryList = categoryPersistencePort.getAllCategories();
 
+        if (categoryList.isEmpty()) {
+            throw new NoContentCategoryException();
+        }
+
         if (DESC_COMPARATOR.equalsIgnoreCase(sortOrder)) {
             categoryList.sort(Comparator.comparing(Category::getName).reversed());
         } else {
             categoryList.sort(Comparator.comparing(Category::getName));
-        }
-
-        if (categoryList.isEmpty()) {
-            throw new NoContentCategoryException();
         }
 
         Integer totalItems = categoryList.size();

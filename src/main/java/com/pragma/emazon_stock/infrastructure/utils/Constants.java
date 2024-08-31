@@ -22,6 +22,7 @@ public class Constants {
     public static final String ARTICLE_ALREADY_EXISTS_EXCEPTION_MESSAGE = "The article already exists";
     public static final String ARTICLE_CATEGORIES_NOT_UNIQUE_MESSAGE = "There are duplicated names in the article categories";
     public static final String ARTICLE_CATEGORIES_OUT_OF_BOUNDS_MESSAGE = "Article categories must be between 1 and 3";
+    public static final String ARTICLE_NO_CONTENT_MESSAGE = "There are currently no articles";
 
     /* --- VALIDATION CONSTANTS: CATEGORY--- */
 
