@@ -14,6 +14,7 @@ public class Article {
     private String articleDescription;
     private Integer articleAmount;
     private Double articlePrice;
+    private Brand articleBrand;
     private List<Category> articleCategories;
 
 }

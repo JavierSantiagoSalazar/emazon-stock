@@ -42,6 +42,19 @@ public class ControllerAdvisor {
         );
     }
 
+    @ExceptionHandler(InvalidFilteringParameterException.class)
+    public ResponseEntity<Response> handleInvalidSortingParameterException(
+            InvalidFilteringParameterException invalidFilteringParameterException
+    ) {
+        return new ResponseEntity<>(
+                Response.builder()
+                        .statusCode(HttpStatus.BAD_REQUEST)
+                        .message(invalidFilteringParameterException.getMessage())
+                        .build(),
+                HttpStatus.BAD_REQUEST
+        );
+    }
+
     @ExceptionHandler(BrandAlreadyExistsException.class)
     public ResponseEntity<Response> handleBrandAlreadyExistsException(
             BrandAlreadyExistsException brandAlreadyExistsException
@@ -52,6 +65,19 @@ public class ControllerAdvisor {
                         .message(Constants.BRAND_ALREADY_EXISTS_EXCEPTION_MESSAGE)
                         .build(),
                 HttpStatus.CONFLICT
+        );
+    }
+
+    @ExceptionHandler(BrandDoesNotExistException.class)
+    public ResponseEntity<Response> handleBrandDoesNotExistException(
+            BrandDoesNotExistException brandDoesNotExistException
+    ) {
+        return new ResponseEntity<>(
+                Response.builder()
+                        .statusCode(HttpStatus.UNPROCESSABLE_ENTITY)
+                        .message(brandDoesNotExistException.getMessage())
+                        .build(),
+                HttpStatus.UNPROCESSABLE_ENTITY
         );
     }
 
@@ -135,6 +161,19 @@ public class ControllerAdvisor {
                 Response.builder()
                         .statusCode(HttpStatus.NO_CONTENT)
                         .message(Constants.BRAND_NO_CONTENT_MESSAGE)
+                        .build(),
+                HttpStatus.NO_CONTENT
+        );
+    }
+
+    @ExceptionHandler(NoContentArticleException.class)
+    public ResponseEntity<Response> handleNoContentArticleException(
+            NoContentArticleException noContentArticleException
+    ) {
+        return new ResponseEntity<>(
+                Response.builder()
+                        .statusCode(HttpStatus.NO_CONTENT)
+                        .message(Constants.ARTICLE_NO_CONTENT_MESSAGE)
                         .build(),
                 HttpStatus.NO_CONTENT
         );

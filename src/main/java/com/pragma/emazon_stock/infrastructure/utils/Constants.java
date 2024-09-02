@@ -22,6 +22,7 @@ public class Constants {
     public static final String ARTICLE_ALREADY_EXISTS_EXCEPTION_MESSAGE = "The article already exists";
     public static final String ARTICLE_CATEGORIES_NOT_UNIQUE_MESSAGE = "There are duplicated names in the article categories";
     public static final String ARTICLE_CATEGORIES_OUT_OF_BOUNDS_MESSAGE = "Article categories must be between 1 and 3";
+    public static final String ARTICLE_NO_CONTENT_MESSAGE = "There are currently no articles";
 
     /* --- VALIDATION CONSTANTS: CATEGORY--- */
 
@@ -54,6 +55,7 @@ public class Constants {
     public static final String ARTICLE_PRICE_MUST_NOT_BE_NULL = "The article price must not be null";
     public static final String ARTICLE_PRICE_CANNOT_BE_NEGATIVE = "The article price can not be negative";
     public static final String ARTICLE_PRICE_MINIMAL_VALUE = "The article price can not be lower than 0.01";
+    public static final String ARTICLE_BRAND_MUST_NOT_BE_NULL = "The article brand must not be null";
     public static final String ARTICLE_CATEGORIES_MUST_NOT_BE_NULL = "The article categories must not be null";
 
     /* --- OPENAPI CONSTANTS --- */

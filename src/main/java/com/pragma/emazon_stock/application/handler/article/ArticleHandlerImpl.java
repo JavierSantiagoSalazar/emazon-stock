@@ -1,8 +1,12 @@
 package com.pragma.emazon_stock.application.handler.article;
 
 import com.pragma.emazon_stock.application.dto.article.ArticleRequest;
+import com.pragma.emazon_stock.application.dto.article.ArticleResponse;
 import com.pragma.emazon_stock.application.mappers.article.ArticleRequestMapper;
+import com.pragma.emazon_stock.application.mappers.article.ArticleResponseMapper;
 import com.pragma.emazon_stock.domain.api.ArticleServicePort;
+import com.pragma.emazon_stock.domain.model.Article;
+import com.pragma.emazon_stock.domain.model.Pagination;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +21,7 @@ public class ArticleHandlerImpl implements ArticleHandler {
 
     private final ArticleServicePort articleServicePort;
     private final ArticleRequestMapper articleRequestMapper;
+    private final ArticleResponseMapper articleResponseMapper;
 
     @Override
     public void createArticle(ArticleRequest articleRequest) {
@@ -27,9 +32,37 @@ public class ArticleHandlerImpl implements ArticleHandler {
 
         articleRequest.setArticleName(articleRequest.getArticleName().trim().toUpperCase());
         articleRequest.setArticleDescription(articleRequest.getArticleDescription().trim());
+        articleRequest.setArticleBrand(articleRequest.getArticleBrand().trim().toUpperCase());
         articleRequest.setArticleCategories(normalizedCategories);
 
         articleServicePort.saveArticle(articleRequestMapper.toDomain(articleRequest));
+    }
+
+    @Override
+    public Pagination<ArticleResponse> getArticles(
+            String sortOrder,
+            String filterBy,
+            String brandName,
+            String categoryName,
+            Integer page,
+            Integer size)
+    {
+
+        Pagination<Article> paginationArticles =
+                articleServicePort.getArticles(sortOrder, filterBy, brandName, categoryName, page, size);
+
+        List<ArticleResponse> articleResponses = paginationArticles.getItems().stream()
+                .map(articleResponseMapper::toResponse)
+                .toList();
+
+        return new Pagination<>(
+                articleResponses,
+                paginationArticles.getPageNo(),
+                paginationArticles.getPageSize(),
+                paginationArticles.getTotalItems(),
+                paginationArticles.getTotalPages(),
+                paginationArticles.getIsLastPage()
+        );
     }
 
 }

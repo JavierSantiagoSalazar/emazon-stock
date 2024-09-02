@@ -2,6 +2,7 @@ package com.pragma.emazon_stock.application.mappers.article;
 
 import com.pragma.emazon_stock.application.dto.article.ArticleRequest;
 import com.pragma.emazon_stock.domain.model.Article;
+import com.pragma.emazon_stock.domain.model.Brand;
 import com.pragma.emazon_stock.domain.model.Category;
 import org.mapstruct.*;
 
@@ -13,8 +14,14 @@ import java.util.List;
 
 public interface ArticleRequestMapper {
 
+    @Mapping(source = "articleBrand", target = "articleBrand", qualifiedByName = "mapBrand")
     @Mapping(source = "articleCategories", target = "articleCategories", qualifiedByName = "mapCategories")
     Article toDomain(ArticleRequest articleRequest);
+
+    @Named("mapBrand")
+    default Brand mapBrand(String articleBrand) {
+        return new Brand(null, articleBrand, null, null);
+    }
 
     @Named("mapCategories")
     default List<Category> mapCategories(List<String> articleCategories) {

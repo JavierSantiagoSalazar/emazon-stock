@@ -11,6 +11,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -74,6 +75,44 @@ class ArticleJpaAdapterTest {
 
         assertFalse(result);
 
+    }
+
+    @Test
+    void givenArticlesExist_whenGetAllArticles_thenReturnArticlesList() {
+
+        ArticleEntity articleEntity = new ArticleEntity(
+                1,
+                "Laptop",
+                "A powerful laptop",
+                5,
+                1500.0,
+                null,
+                null
+        );
+        List<ArticleEntity> articleEntityList = List.of(articleEntity);
+
+        Article article = new Article(
+                1,
+                "Laptop",
+                "A powerful laptop",
+                5,
+                1500.0,
+                null,
+                null
+        );
+        List<Article> articleList = List.of(article);
+
+        when(articleRepository.findAll()).thenReturn(articleEntityList);
+        when(articleEntityMapper.toArticleList(articleEntityList)).thenReturn(articleList);
+
+        List<Article> result = articleJpaAdapter.getAllArticles();
+
+        assertEquals(1, result.size());
+        assertEquals("Laptop", result.get(0).getArticleName());
+        assertEquals("A powerful laptop", result.get(0).getArticleDescription());
+
+        verify(articleRepository, times(1)).findAll();
+        verify(articleEntityMapper, times(1)).toArticleList(articleEntityList);
     }
 
 }
