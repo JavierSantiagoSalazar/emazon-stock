@@ -3,16 +3,16 @@ package com.pragma.emazon_stock.domain.usecase;
 import com.pragma.emazon_stock.domain.api.CategoryServicePort;
 import com.pragma.emazon_stock.domain.exceptions.CategoryAlreadyExistsException;
 import com.pragma.emazon_stock.domain.exceptions.NoContentCategoryException;
-import com.pragma.emazon_stock.domain.exceptions.PageOutOfBoundsException;
 import com.pragma.emazon_stock.domain.model.Category;
 import com.pragma.emazon_stock.domain.model.Pagination;
 import com.pragma.emazon_stock.domain.spi.CategoryPersistencePort;
+import com.pragma.emazon_stock.domain.utils.PaginationUtils;
 import lombok.AllArgsConstructor;
 
 import java.util.Comparator;
 import java.util.List;
 
-import static com.pragma.emazon_stock.infrastructure.utils.Constants.DESC_COMPARATOR;
+import static com.pragma.emazon_stock.domain.utils.Constants.DESC_COMPARATOR;
 
 @AllArgsConstructor
 public class CategoryUseCase implements CategoryServicePort {
@@ -44,32 +44,11 @@ public class CategoryUseCase implements CategoryServicePort {
             throw new NoContentCategoryException();
         }
 
-        if (DESC_COMPARATOR.equalsIgnoreCase(sortOrder)) {
-            categoryList.sort(Comparator.comparing(Category::getName).reversed());
-        } else {
-            categoryList.sort(Comparator.comparing(Category::getName));
-        }
+        categoryList.sort(DESC_COMPARATOR.equalsIgnoreCase(sortOrder) ?
+                Comparator.comparing(Category::getName).reversed() :
+                Comparator.comparing(Category::getName));
 
-        Integer totalItems = categoryList.size();
-        Integer totalPages = (int) Math.ceil((double) totalItems / size);
-        Integer fromIndex = Math.min((page - 1) * size, totalItems);
-        Integer toIndex = Math.min(fromIndex + size, totalItems);
-        Boolean isLastPage = page >= totalPages;
-
-        if (page > totalPages || page < 1) {
-            throw new PageOutOfBoundsException(page, totalPages);
-        }
-
-        List<Category> paginatedCategories = categoryList.subList(fromIndex, toIndex);
-
-        return new Pagination<>(
-                paginatedCategories,
-                page,
-                size,
-                (long) totalItems,
-                totalPages,
-                isLastPage
-        );
+        return PaginationUtils.paginate(categoryList, page, size);
     }
 
 }

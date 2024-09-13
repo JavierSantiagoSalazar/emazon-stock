@@ -14,8 +14,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest
 class ArticleJpaAdapterTest {
@@ -36,7 +40,6 @@ class ArticleJpaAdapterTest {
 
         defaultArticle = ModelsTestFactory.createDefaultArticle();
         defaultArticleEntity = ModelsTestFactory.createDefaultArticleEntity();
-
     }
 
     @Test
@@ -48,7 +51,6 @@ class ArticleJpaAdapterTest {
 
         verify(articleRepository, times(1)).save(defaultArticleEntity);
         verify(articleEntityMapper, times(1)).toEntity(defaultArticle);
-
     }
 
     @Test
@@ -61,7 +63,6 @@ class ArticleJpaAdapterTest {
         verify(articleRepository, times(1)).findByArticleName(defaultArticle.getArticleName());
 
         assertTrue(result);
-
     }
 
     @Test
@@ -74,7 +75,6 @@ class ArticleJpaAdapterTest {
         verify(articleRepository, times(1)).findByArticleName(defaultArticle.getArticleName());
 
         assertFalse(result);
-
     }
 
     @Test

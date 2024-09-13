@@ -7,6 +7,7 @@ import com.pragma.emazon_stock.application.handler.category.CategoryHandler;
 import com.pragma.emazon_stock.domain.exceptions.CategoryAlreadyExistsException;
 import com.pragma.emazon_stock.domain.exceptions.PageOutOfBoundsException;
 import com.pragma.emazon_stock.domain.model.Pagination;
+import com.pragma.emazon_stock.infrastructure.configuration.security.filter.JwtValidatorFilter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,7 +24,10 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import java.util.List;
 
 import static org.hamcrest.Matchers.containsString;
-import static org.mockito.Mockito.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -39,6 +43,9 @@ class CategoryRestControllerTest {
 
     @MockBean
     private CategoryHandler categoryHandler;
+
+    @MockBean
+    private JwtValidatorFilter jwtValidatorFilter;
 
     @Autowired
     private ObjectMapper objectMapper;
