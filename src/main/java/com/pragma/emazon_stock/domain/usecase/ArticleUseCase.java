@@ -1,7 +1,9 @@
 package com.pragma.emazon_stock.domain.usecase;
 
 import com.pragma.emazon_stock.domain.api.ArticleServicePort;
-import com.pragma.emazon_stock.domain.exceptions.*;
+import com.pragma.emazon_stock.domain.exceptions.ArticleAlreadyExistsException;
+import com.pragma.emazon_stock.domain.exceptions.NoContentArticleException;
+import com.pragma.emazon_stock.domain.exceptions.PageOutOfBoundsException;
 import com.pragma.emazon_stock.domain.model.Article;
 import com.pragma.emazon_stock.domain.model.Brand;
 import com.pragma.emazon_stock.domain.model.Category;
@@ -9,19 +11,21 @@ import com.pragma.emazon_stock.domain.model.Pagination;
 import com.pragma.emazon_stock.domain.spi.ArticlePersistencePort;
 import com.pragma.emazon_stock.domain.spi.BrandPersistencePort;
 import com.pragma.emazon_stock.domain.spi.CategoryPersistencePort;
+import com.pragma.emazon_stock.domain.utils.ArticleValidator;
 import lombok.AllArgsConstructor;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 
-import static com.pragma.emazon_stock.infrastructure.utils.Constants.DESC_COMPARATOR;
+import static com.pragma.emazon_stock.domain.utils.Constants.DESC_COMPARATOR;
+import static com.pragma.emazon_stock.domain.utils.Constants.GET_BY_BRAND;
+import static com.pragma.emazon_stock.domain.utils.Constants.GET_BY_CATEGORY;
+import static com.pragma.emazon_stock.domain.utils.Constants.PAGE_INDEX_HELPER;
 
 @AllArgsConstructor
 public class ArticleUseCase implements ArticleServicePort {
 
-    public static final String GET_BY_ARTICLE = "articleName";
-    public static final String GET_BY_BRAND = "brandName";
-    public static final String GET_BY_CATEGORY = "categoryName";
 
     private final ArticlePersistencePort articlePersistencePort;
     private final CategoryPersistencePort categoryPersistencePort;
@@ -38,7 +42,7 @@ public class ArticleUseCase implements ArticleServicePort {
                 .map(Category::getName)
                 .toList();
 
-        validateCategoryNames(categoryNames);
+        ArticleValidator.validateCategoryNames(categoryNames);
 
         Brand brand = brandPersistencePort.getBrandByName(article.getArticleBrand().getBrandName());
         List<Category> categoryList = categoryPersistencePort.getAllCategoriesByName(categoryNames);
@@ -50,42 +54,33 @@ public class ArticleUseCase implements ArticleServicePort {
 
     @Override
     public boolean checkIfArticleExists(String articleName) {
-
         return articlePersistencePort.checkIfArticleExists(articleName);
     }
 
     @Override
     public Pagination<Article> getArticles(
-            String sortOrder, String filterBy, String brandName,
-            String categoryName, Integer page, Integer size
+            String sortOrder,
+            String filterBy,
+            String brandName,
+            String categoryName,
+            Integer page,
+            Integer size
     ) {
+        List<Article> articleList = new ArrayList<>(articlePersistencePort.getAllArticles());
 
-        List<Article> articleList = articlePersistencePort.getAllArticles();
-
-        validateData(filterBy, articleList);
-
-        if (filterBy.equalsIgnoreCase(GET_BY_CATEGORY)) {
-            articleList = articleList.stream()
-                    .filter(article -> article.getArticleCategories().stream()
-                            .anyMatch(category -> category.getName().equals(categoryName)))
-                    .collect(Collectors.toList());
-        }
-
-        if (filterBy.equalsIgnoreCase(GET_BY_BRAND)) {
-            articleList = articleList.stream()
-                    .filter(article -> article.getArticleBrand().getBrandName().equals(brandName))
-                    .collect(Collectors.toList());
-        }
+        ArticleValidator.validateData(filterBy, articleList);
 
         articleList.sort(getComparatorForSorting(sortOrder));
 
+        articleList = applyFilters(filterBy, brandName, categoryName, articleList);
+
         Integer totalItems = articleList.size();
         Integer totalPages = (int) Math.ceil((double) totalItems / size);
-        Integer fromIndex = Math.min((page - 1) * size, totalItems);
+        Integer fromIndex = Math.min((page - PAGE_INDEX_HELPER) * size, totalItems);
         Integer toIndex = Math.min(fromIndex + size, totalItems);
         Boolean isLastPage = page >= totalPages;
 
-        if (page > totalPages || page < 1) {
+        if (page > totalPages || page < PAGE_INDEX_HELPER) {
             throw new PageOutOfBoundsException(page, totalPages);
         }
 
@@ -105,36 +100,28 @@ public class ArticleUseCase implements ArticleServicePort {
         );
     }
 
-    private void validateCategoryNames(List<String> categoryNames) {
+    private List<Article> applyFilters(String filterBy, String brandName, String categoryName, List<Article> articleList) {
 
-        Set<String> uniqueCategoryNames = new HashSet<>(categoryNames);
-
-        if (uniqueCategoryNames.size() != categoryNames.size()) {
-            throw new NotUniqueArticleCategoriesException();
+        if (filterBy.equalsIgnoreCase(GET_BY_CATEGORY)) {
+            return articleList.stream()
+                    .filter(article -> article.getArticleCategories().stream()
+                            .anyMatch(category -> category.getName().equals(categoryName)))
+                    .toList();
         }
 
-        if (categoryNames.isEmpty() || categoryNames.size() > 3) {
-            throw new ArticleCategoryOutOfBoundsException();
+        if (filterBy.equalsIgnoreCase(GET_BY_BRAND)) {
+            return articleList.stream()
+                    .filter(article -> article.getArticleBrand().getBrandName().equals(brandName))
+                    .toList();
         }
+
+        return articleList;
     }
 
     private Comparator<Article> getComparatorForSorting(String sortOrder) {
         return DESC_COMPARATOR.equalsIgnoreCase(sortOrder) ?
                 Comparator.comparing(Article::getArticleName).reversed() :
                 Comparator.comparing(Article::getArticleName);
-    }
-
-    private void validateData(String getBy, List<Article> articleList) {
-
-        if (articleList.isEmpty()) {
-            throw new NoContentCategoryException();
-        }
-
-        if (!getBy.equalsIgnoreCase(GET_BY_ARTICLE) &&
-                !getBy.equalsIgnoreCase(GET_BY_BRAND) &&
-                !getBy.equalsIgnoreCase(GET_BY_CATEGORY)) {
-            throw new InvalidFilteringParameterException(getBy);
-        }
     }
 
 }

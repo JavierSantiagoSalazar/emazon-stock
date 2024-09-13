@@ -27,7 +27,6 @@ public class ArticleJpaAdapter implements ArticlePersistencePort {
 
     @Override
     public List<Article> getAllArticles() {
-
         List<ArticleEntity> articleEntityList = articleRepository.findAll();
         return articleEntityMapper.toArticleList(articleEntityList);
     }

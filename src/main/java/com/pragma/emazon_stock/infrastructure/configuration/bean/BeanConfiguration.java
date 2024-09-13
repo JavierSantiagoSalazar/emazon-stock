@@ -9,6 +9,7 @@ import com.pragma.emazon_stock.domain.spi.CategoryPersistencePort;
 import com.pragma.emazon_stock.domain.usecase.ArticleUseCase;
 import com.pragma.emazon_stock.domain.usecase.BrandUseCase;
 import com.pragma.emazon_stock.domain.usecase.CategoryUseCase;
+import com.pragma.emazon_stock.infrastructure.configuration.security.exceptionhandler.CustomAuthenticationEntryPoint;
 import com.pragma.emazon_stock.infrastructure.out.jpa.adapter.ArticleJpaAdapter;
 import com.pragma.emazon_stock.infrastructure.out.jpa.adapter.BrandJpaAdapter;
 import com.pragma.emazon_stock.infrastructure.out.jpa.adapter.CategoryJpaAdapter;
@@ -21,6 +22,8 @@ import com.pragma.emazon_stock.infrastructure.out.jpa.repository.CategoryReposit
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 @RequiredArgsConstructor
@@ -64,5 +67,16 @@ public class BeanConfiguration {
     public ArticleServicePort articleServicePort() {
         return new ArticleUseCase(articlePersistencePort(), categoryPersistencePort(), brandPersistencePort());
     }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public CustomAuthenticationEntryPoint customAuthenticationEntryPoint() {
+        return new CustomAuthenticationEntryPoint();
+    }
+
 
 }

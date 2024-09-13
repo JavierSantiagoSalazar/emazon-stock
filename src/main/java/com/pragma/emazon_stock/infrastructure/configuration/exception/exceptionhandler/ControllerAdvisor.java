@@ -1,9 +1,20 @@
 package com.pragma.emazon_stock.infrastructure.configuration.exception.exceptionhandler;
 
-import com.pragma.emazon_stock.domain.exceptions.*;
+import com.pragma.emazon_stock.domain.exceptions.ArticleAlreadyExistsException;
+import com.pragma.emazon_stock.domain.exceptions.ArticleCategoryOutOfBoundsException;
+import com.pragma.emazon_stock.domain.exceptions.BrandAlreadyExistsException;
+import com.pragma.emazon_stock.domain.exceptions.BrandDoesNotExistException;
+import com.pragma.emazon_stock.domain.exceptions.CategoryAlreadyExistsException;
+import com.pragma.emazon_stock.domain.exceptions.CategoryDoesNotExistException;
+import com.pragma.emazon_stock.domain.exceptions.InvalidFilteringParameterException;
+import com.pragma.emazon_stock.domain.exceptions.NoContentArticleException;
+import com.pragma.emazon_stock.domain.exceptions.NoContentBrandException;
+import com.pragma.emazon_stock.domain.exceptions.NoContentCategoryException;
+import com.pragma.emazon_stock.domain.exceptions.NotUniqueArticleCategoriesException;
+import com.pragma.emazon_stock.domain.exceptions.PageOutOfBoundsException;
+import com.pragma.emazon_stock.domain.utils.Constants;
 import com.pragma.emazon_stock.infrastructure.configuration.exception.dto.PaginatedResponse;
 import com.pragma.emazon_stock.infrastructure.configuration.exception.dto.Response;
-import com.pragma.emazon_stock.infrastructure.utils.Constants;
 import org.springframework.context.MessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

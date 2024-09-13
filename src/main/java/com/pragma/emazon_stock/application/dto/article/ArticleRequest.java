@@ -1,7 +1,12 @@
 package com.pragma.emazon_stock.application.dto.article;
 
-import com.pragma.emazon_stock.infrastructure.utils.Constants;
-import jakarta.validation.constraints.*;
+import com.pragma.emazon_stock.domain.utils.Constants;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,14 +16,14 @@ import java.util.List;
 @Setter
 public class ArticleRequest {
 
-    @NotBlank(message = Constants.ARTICLE_NAME_MUST_NOT_BE_BLANK)
+    private @NotBlank(message = Constants.ARTICLE_NAME_MUST_NOT_BE_BLANK)
     @NotNull(message = Constants.ARTICLE_NAME_MUST_NOT_BE_NULL)
-    @Size(max = 120, message = Constants.ARTICLE_NAME_LENGTH_EXCEEDED)
-    private String articleName;
+    @Size(max = Constants.ARTICLE_NAME_LENGTH, message = Constants.ARTICLE_NAME_LENGTH_EXCEEDED)
+    String articleName;
 
     @NotBlank(message = Constants.ARTICLE_DESCRIPTION_MUST_NOT_BE_BLANK)
     @NotNull(message = Constants.ARTICLE_DESCRIPTION_MUST_NOT_BE_NULL)
-    @Size(max = 160, message = Constants.ARTICLE_DESCRIPTION_LENGTH_EXCEEDED)
+    @Size(max = Constants.ARTICLE_DESCRIPTION_LENGTH, message = Constants.ARTICLE_DESCRIPTION_LENGTH_EXCEEDED)
     private String articleDescription;
 
     @NotNull(message = Constants.ARTICLE_AMOUNT_MUST_NOT_BE_NULL)
@@ -27,7 +32,7 @@ public class ArticleRequest {
 
     @NotNull(message = Constants.ARTICLE_PRICE_MUST_NOT_BE_NULL)
     @Positive(message = Constants.ARTICLE_PRICE_CANNOT_BE_NEGATIVE)
-    @DecimalMin(value = "0.01", message = Constants.ARTICLE_PRICE_MINIMAL_VALUE)
+    @DecimalMin(value = Constants.ARTICLE_PRICE_LENGTH, message = Constants.ARTICLE_PRICE_MINIMAL_VALUE)
     private Double articlePrice;
 
     @NotNull(message = Constants.ARTICLE_BRAND_MUST_NOT_BE_NULL)

@@ -28,7 +28,6 @@ public class CategoryJpaAdapter implements CategoryPersistencePort {
 
     @Override
     public List<Category> getAllCategories() {
-
         List<CategoryEntity> categoryEntityList = categoryRepository.findAll();
         return categoryEntityMapper.toCategoryList(categoryEntityList);
     }

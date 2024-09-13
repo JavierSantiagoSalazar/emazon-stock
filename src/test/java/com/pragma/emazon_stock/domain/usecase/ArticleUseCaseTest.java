@@ -1,6 +1,13 @@
 package com.pragma.emazon_stock.domain.usecase;
 
-import com.pragma.emazon_stock.domain.exceptions.*;
+import com.pragma.emazon_stock.domain.exceptions.ArticleAlreadyExistsException;
+import com.pragma.emazon_stock.domain.exceptions.ArticleCategoryOutOfBoundsException;
+import com.pragma.emazon_stock.domain.exceptions.BrandDoesNotExistException;
+import com.pragma.emazon_stock.domain.exceptions.CategoryDoesNotExistException;
+import com.pragma.emazon_stock.domain.exceptions.InvalidFilteringParameterException;
+import com.pragma.emazon_stock.domain.exceptions.NoContentCategoryException;
+import com.pragma.emazon_stock.domain.exceptions.NotUniqueArticleCategoriesException;
+import com.pragma.emazon_stock.domain.exceptions.PageOutOfBoundsException;
 import com.pragma.emazon_stock.domain.model.Article;
 import com.pragma.emazon_stock.domain.model.Category;
 import com.pragma.emazon_stock.domain.model.Pagination;
@@ -20,8 +27,12 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 
 @SpringBootTest
@@ -186,7 +197,7 @@ class ArticleUseCaseTest {
     void givenArticlesFilteredByBrand_whenGetArticles_thenReturnFilteredArticles() {
 
         String brandName = defaultArticle.getArticleBrand().getBrandName();
-        when(articlePersistencePort.getAllArticles()).thenReturn(articleList);
+        when(articlePersistencePort.getAllArticles()).thenReturn(new ArrayList<>(articleList));
 
         Pagination<Article> result = articleUseCase.getArticles(
                 "asc",
