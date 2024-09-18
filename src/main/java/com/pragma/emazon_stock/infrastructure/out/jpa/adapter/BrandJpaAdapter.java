@@ -28,14 +28,12 @@ public class BrandJpaAdapter implements BrandPersistencePort {
 
     @Override
     public List<Brand> getAllBrands() {
-
         List<BrandEntity> brandEntityList = brandRepository.findAll();
         return brandEntityMapper.toBrandList(brandEntityList);
     }
 
     @Override
     public Brand getBrandByName(String brandName) {
-
         BrandEntity brandEntity = brandRepository.findByBrandName(brandName).orElseThrow(
                 () -> new BrandDoesNotExistException(brandName)
         );

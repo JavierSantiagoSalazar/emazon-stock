@@ -6,6 +6,7 @@ public class Constants {
         throw new IllegalStateException(UTILITY_CLASS);
     }
 
+    public static final int ZERO = 0;
     public static final String SPRING_COMPONENT_MODEL = "spring";
     public static final String DESC_COMPARATOR = "desc";
     public static final String UTILITY_CLASS = "Utility class";
@@ -24,6 +25,7 @@ public class Constants {
     /* --- SECURITY CONSTANTS --- */
 
     public static final String ROLE_ADMIN = "ADMIN";
+    public static final String ROLE_WAREHOUSE_ASSISTANT = "WAREHOUSE_ASSISTANT";
     public static final String ARTICLE_URL = "/article/";
     public static final String BRAND_URL = "/brand/";
     public static final String CATEGORY_URL = "/category/";
@@ -33,6 +35,9 @@ public class Constants {
 
     public static final String PAGE_OUT_OF_BOUNDS_PAGE = "Page ";
     public static final String PAGE_OUT_OF_BOUNDS_TOTAL_PAGES = " is out of range. Total pages: ";
+
+    public static final String ARTICLE_DOES_NOT_EXIST = "One or more articles not found for the provided IDs, articles not found: ";
+    public static final String SUPPLY_MISMATCH = "The size of article list and amounts list do not match";
 
     public static final String BRAND_DOES_NOT_EXIST = "The requested brand does not exist";
     public static final String REQUESTED_BRAND = ", requested brand: ";
@@ -54,6 +59,7 @@ public class Constants {
     public static final String BRAND_NO_CONTENT_MESSAGE = "There are currently no brands";
 
     /* --- EXCEPTIONS CONSTANTS: ARTICLE --- */
+
     public static final String ARTICLE_ALREADY_EXISTS_EXCEPTION_MESSAGE = "The article already exists";
     public static final String ARTICLE_CATEGORIES_NOT_UNIQUE_MESSAGE = "There are duplicated names in the article categories";
     public static final String ARTICLE_CATEGORIES_OUT_OF_BOUNDS_MESSAGE = "Article categories must be between 1 and 3";
@@ -99,6 +105,9 @@ public class Constants {
     public static final String ARTICLE_PRICE_LENGTH = "0.01";
     public static final String ARTICLE_BRAND_MUST_NOT_BE_NULL = "The article brand must not be null";
     public static final String ARTICLE_CATEGORIES_MUST_NOT_BE_NULL = "The article categories must not be null";
+    public static final String ARTICLE_ID_MUST_NOT_BE_NULL = "Article ID cannot be null";
+    public static final String ARTICLE_ID_MUST_BE_POSITIVE = "Article ID must be a positive number";
+    public static final String ARTICLE_AMOUNT_MUST_BE_POSITIVE = "Article amount must be a positive number";
 
     /* --- OPENAPI CONSTANTS --- */
 
@@ -114,6 +123,9 @@ public class Constants {
 
     public static final String ARTICLE_SUMMARY = "Add new article";
     public static final String ARTICLE_GET_ALL_SUMMARY = "Get all articles";
+    public static final String ARTICLE_UPDATED = "Article updated";
+    public static final String ARTICLE_NOT_FOUND = "One or more articles were not found";
+    public static final String ARTICLE_INVALID_REQUEST = "Bad request";
 
     public static final String ARTICLE_CREATED = "Article created";
     public static final String ARTICLE_ALREADY_EXISTS = "Article already exists";

@@ -16,10 +16,10 @@ import java.util.List;
 @Setter
 public class ArticleRequest {
 
-    private @NotBlank(message = Constants.ARTICLE_NAME_MUST_NOT_BE_BLANK)
+    @NotBlank(message = Constants.ARTICLE_NAME_MUST_NOT_BE_BLANK)
     @NotNull(message = Constants.ARTICLE_NAME_MUST_NOT_BE_NULL)
     @Size(max = Constants.ARTICLE_NAME_LENGTH, message = Constants.ARTICLE_NAME_LENGTH_EXCEEDED)
-    String articleName;
+    private String articleName;
 
     @NotBlank(message = Constants.ARTICLE_DESCRIPTION_MUST_NOT_BE_BLANK)
     @NotNull(message = Constants.ARTICLE_DESCRIPTION_MUST_NOT_BE_NULL)

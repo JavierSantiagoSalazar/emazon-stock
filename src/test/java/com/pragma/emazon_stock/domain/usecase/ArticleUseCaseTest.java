@@ -2,15 +2,18 @@ package com.pragma.emazon_stock.domain.usecase;
 
 import com.pragma.emazon_stock.domain.exceptions.ArticleAlreadyExistsException;
 import com.pragma.emazon_stock.domain.exceptions.ArticleCategoryOutOfBoundsException;
+import com.pragma.emazon_stock.domain.exceptions.ArticleNotFoundException;
 import com.pragma.emazon_stock.domain.exceptions.BrandDoesNotExistException;
 import com.pragma.emazon_stock.domain.exceptions.CategoryDoesNotExistException;
 import com.pragma.emazon_stock.domain.exceptions.InvalidFilteringParameterException;
 import com.pragma.emazon_stock.domain.exceptions.NoContentCategoryException;
 import com.pragma.emazon_stock.domain.exceptions.NotUniqueArticleCategoriesException;
 import com.pragma.emazon_stock.domain.exceptions.PageOutOfBoundsException;
+import com.pragma.emazon_stock.domain.exceptions.SupplyAmountMismatchException;
 import com.pragma.emazon_stock.domain.model.Article;
 import com.pragma.emazon_stock.domain.model.Category;
 import com.pragma.emazon_stock.domain.model.Pagination;
+import com.pragma.emazon_stock.domain.model.Supply;
 import com.pragma.emazon_stock.domain.spi.ArticlePersistencePort;
 import com.pragma.emazon_stock.domain.spi.BrandPersistencePort;
 import com.pragma.emazon_stock.domain.spi.CategoryPersistencePort;
@@ -27,6 +30,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.never;
@@ -294,6 +298,68 @@ class ArticleUseCaseTest {
         assertEquals(1, result.getItems().size());
         assertEquals(1, result.getTotalPages());
         verify(articlePersistencePort, times(1)).getAllArticles();
+    }
+
+    @Test
+    void givenValidSupply_whenUpdateArticleSupplyIsCalled_thenReturnTrue() {
+        // Arrange
+        Supply supply = new Supply(List.of(1, 2), List.of(10, 20));
+        Article article1 = new Article(1, "Article 1", "Description 1", 100, 10.0, null, null);
+        Article article2 = new Article(2, "Article 2", "Description 2", 200, 20.0, null, null);
+        List<Article> articlesList = List.of(article1, article2);
+
+        when(articlePersistencePort.getArticlesByIds(supply.getArticleIds())).thenReturn(articlesList);
+        when(articlePersistencePort.saveAllArticles(articlesList)).thenReturn(true);
+
+        boolean result = articleUseCase.updateArticleSupply(supply);
+
+        assertTrue(result);
+        assertEquals(110, article1.getArticleAmount());
+        assertEquals(220, article2.getArticleAmount());
+        verify(articlePersistencePort, times(1)).getArticlesByIds(supply.getArticleIds());
+        verify(articlePersistencePort, times(1)).saveAllArticles(articlesList);
+    }
+
+    @Test
+    void givenSupplyWithNonExistentArticle_whenUpdateArticleSupplyIsCalled_thenThrowArticleNotFoundException() {
+
+        Supply supply = new Supply(List.of(1, 2), List.of(10, 20));
+
+        when(articlePersistencePort.getArticlesByIds(supply.getArticleIds())).thenReturn(articleList);
+
+        ArticleNotFoundException exception = assertThrows(ArticleNotFoundException.class, () -> articleUseCase.updateArticleSupply(supply));
+        assertEquals(List.of(2), exception.getNotFoundIds());
+        verify(articlePersistencePort, times(1)).getArticlesByIds(supply.getArticleIds());
+        verify(articlePersistencePort, never()).saveAllArticles(anyList());
+    }
+
+    @Test
+    void givenSupplyWithMismatchedAmounts_whenUpdateArticleSupplyIsCalled_thenThrowSupplyAmountMismatchException() {
+
+        Supply supply = new Supply(List.of(1, 2), List.of(10));
+        Article article1 = new Article(
+                1, "Article 1",
+                "Description 1",
+                100,
+                10.0,
+                null, null
+        );
+        Article article2 = new Article(
+                2,
+                "Article 2",
+                "Description 2",
+                200,
+                20.0,
+                null,
+                null
+        );
+        List<Article> articlesList = List.of(article1, article2);
+
+        when(articlePersistencePort.getArticlesByIds(supply.getArticleIds())).thenReturn(articlesList);
+
+        assertThrows(SupplyAmountMismatchException.class, () -> articleUseCase.updateArticleSupply(supply));
+        verify(articlePersistencePort, times(1)).getArticlesByIds(supply.getArticleIds());
+        verify(articlePersistencePort, never()).saveAllArticles(anyList());
     }
 
 }

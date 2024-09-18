@@ -10,6 +10,10 @@ public interface ArticlePersistencePort {
 
     Boolean checkIfArticleExists(String articleName);
 
+    List<Article> getArticlesByIds(List<Integer> articleIds);
+
     List<Article> getAllArticles();
+
+    Boolean saveAllArticles(List<Article> articles);
 
 }

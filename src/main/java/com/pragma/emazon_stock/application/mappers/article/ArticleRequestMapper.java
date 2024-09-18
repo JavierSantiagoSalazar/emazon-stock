@@ -15,7 +15,6 @@ import java.util.List;
 @Mapper(componentModel = Constants.SPRING_COMPONENT_MODEL,
         unmappedTargetPolicy = ReportingPolicy.IGNORE,
         unmappedSourcePolicy = ReportingPolicy.IGNORE)
-
 public interface ArticleRequestMapper {
 
     @Mapping(source = "articleBrand", target = "articleBrand", qualifiedByName = "mapBrand")

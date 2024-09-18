@@ -2,16 +2,19 @@ package com.pragma.emazon_stock.application.handler;
 
 import com.pragma.emazon_stock.application.dto.article.ArticleRequest;
 import com.pragma.emazon_stock.application.dto.article.ArticleResponse;
+import com.pragma.emazon_stock.application.dto.article.SupplyRequest;
 import com.pragma.emazon_stock.application.dto.brand.BrandResponse;
 import com.pragma.emazon_stock.application.dto.category.EmbeddedCategoryResponse;
 import com.pragma.emazon_stock.application.handler.article.ArticleHandlerImpl;
 import com.pragma.emazon_stock.application.mappers.article.ArticleRequestMapper;
 import com.pragma.emazon_stock.application.mappers.article.ArticleResponseMapper;
+import com.pragma.emazon_stock.application.mappers.article.SupplyRequestMapper;
 import com.pragma.emazon_stock.domain.api.ArticleServicePort;
 import com.pragma.emazon_stock.domain.model.Article;
 import com.pragma.emazon_stock.domain.model.Brand;
 import com.pragma.emazon_stock.domain.model.Category;
 import com.pragma.emazon_stock.domain.model.Pagination;
+import com.pragma.emazon_stock.domain.model.Supply;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -38,6 +41,9 @@ class ArticleHandlerImplTest {
 
     @Mock
     private ArticleResponseMapper articleResponseMapper;
+
+    @Mock
+    private SupplyRequestMapper supplyRequestMapper;
 
     @InjectMocks
     private ArticleHandlerImpl articleHandlerImpl;
@@ -144,6 +150,25 @@ class ArticleHandlerImplTest {
         verify(articleServicePort, times(1))
                 .getArticles(sortOrder, filterBy, brandName, categoryName, page, size);
         verify(articleResponseMapper, times(1)).toResponse(article);
+    }
+
+    @Test
+    void givenSupplyRequest_whenUpdateArticleSupplyIsCalled_thenReturnTrue() {
+
+        SupplyRequest supplyRequest = new SupplyRequest();
+        supplyRequest.setSupplyArticleIds(List.of(10, 5));
+        supplyRequest.setSupplyArticleAmounts(List.of(100, 600));
+        Supply supply = new Supply(List.of(10, 5), List.of(100, 600));
+
+        when(supplyRequestMapper.toDomain(supplyRequest)).thenReturn(supply);
+        when(articleServicePort.updateArticleSupply(supply)).thenReturn(true);
+
+        Boolean result = articleHandlerImpl.updateArticleSupply(supplyRequest);
+
+        verify(supplyRequestMapper, times(1)).toDomain(supplyRequest);
+        verify(articleServicePort, times(1)).updateArticleSupply(supply);
+
+        assertTrue(result);
     }
 
 }

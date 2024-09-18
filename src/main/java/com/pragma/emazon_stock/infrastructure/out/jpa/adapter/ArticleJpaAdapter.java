@@ -31,4 +31,16 @@ public class ArticleJpaAdapter implements ArticlePersistencePort {
         return articleEntityMapper.toArticleList(articleEntityList);
     }
 
+    @Override
+    public List<Article> getArticlesByIds(List<Integer> articleIds) {
+        List<ArticleEntity> articleEntityList = articleRepository.findAllByArticleId(articleIds);
+        return articleEntityMapper.toArticleList(articleEntityList);
+    }
+
+    @Override
+    public Boolean saveAllArticles(List<Article> articles) {
+        List<ArticleEntity> entities = articleEntityMapper.toEntityList(articles);
+        return !articleRepository.saveAll(entities).isEmpty();
+    }
+
 }
