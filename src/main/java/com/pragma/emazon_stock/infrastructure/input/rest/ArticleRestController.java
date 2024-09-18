@@ -2,6 +2,7 @@ package com.pragma.emazon_stock.infrastructure.input.rest;
 
 import com.pragma.emazon_stock.application.dto.article.ArticleRequest;
 import com.pragma.emazon_stock.application.dto.article.ArticleResponse;
+import com.pragma.emazon_stock.application.dto.article.SupplyRequest;
 import com.pragma.emazon_stock.application.handler.article.ArticleHandler;
 import com.pragma.emazon_stock.domain.model.Pagination;
 import com.pragma.emazon_stock.domain.utils.Constants;
@@ -18,6 +19,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -110,6 +112,35 @@ public class ArticleRestController {
             @RequestParam(defaultValue = Constants.SIZE_DEFAULT_VALUE) Integer size
     ) {
         return ResponseEntity.ok(articleHandler.getArticles(sortOrder, filterBy, brandName, categoryName, page, size));
+    }
+
+    @Operation(summary = Constants.ARTICLE_SUMMARY)
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = HttpStatusCode.OK,
+                    description = Constants.ARTICLE_UPDATED,
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = HttpStatusCode.NOT_FOUND,
+                    description = Constants.ARTICLE_NOT_FOUND,
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = HttpStatusCode.BAD_REQUEST,
+                    description = Constants.ARTICLE_INVALID_REQUEST,
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = HttpStatusCode.BAD_REQUEST,
+                    description = Constants.SUPPLY_MISMATCH,
+                    content = @Content
+            )
+    })
+    @PatchMapping("/")
+    public ResponseEntity<Boolean> updateArticleAmount(@Valid @RequestBody SupplyRequest supplyRequest) {
+        boolean isUpdated = articleHandler.updateArticleSupply(supplyRequest);
+        return ResponseEntity.ok(isUpdated);
     }
 
 }

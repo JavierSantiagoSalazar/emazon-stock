@@ -2,16 +2,20 @@ package com.pragma.emazon_stock.domain.usecase;
 
 import com.pragma.emazon_stock.domain.api.ArticleServicePort;
 import com.pragma.emazon_stock.domain.exceptions.ArticleAlreadyExistsException;
+import com.pragma.emazon_stock.domain.exceptions.ArticleNotFoundException;
 import com.pragma.emazon_stock.domain.exceptions.NoContentArticleException;
 import com.pragma.emazon_stock.domain.exceptions.PageOutOfBoundsException;
+import com.pragma.emazon_stock.domain.exceptions.SupplyAmountMismatchException;
 import com.pragma.emazon_stock.domain.model.Article;
 import com.pragma.emazon_stock.domain.model.Brand;
 import com.pragma.emazon_stock.domain.model.Category;
 import com.pragma.emazon_stock.domain.model.Pagination;
+import com.pragma.emazon_stock.domain.model.Supply;
 import com.pragma.emazon_stock.domain.spi.ArticlePersistencePort;
 import com.pragma.emazon_stock.domain.spi.BrandPersistencePort;
 import com.pragma.emazon_stock.domain.spi.CategoryPersistencePort;
 import com.pragma.emazon_stock.domain.utils.ArticleValidator;
+import com.pragma.emazon_stock.domain.utils.Constants;
 import lombok.AllArgsConstructor;
 
 import java.util.ArrayList;
@@ -98,6 +102,36 @@ public class ArticleUseCase implements ArticleServicePort {
                 totalPages,
                 isLastPage
         );
+    }
+
+    @Override
+    public Boolean updateArticleSupply(Supply supply) {
+
+        List<Article> articleList = articlePersistencePort.getArticlesByIds(supply.getArticleIds());
+
+        List<Integer> notFoundIds = supply.getArticleIds().stream()
+                .filter(id -> articleList.stream().noneMatch(article -> article.getArticleId().equals(id)))
+                .toList();
+
+        validateSupplyData(supply, articleList, notFoundIds);
+
+        for (int i = Constants.ZERO; i < articleList.size(); i++) {
+            Article article = articleList.get(i);
+            Integer amountToAdd = supply.getAmounts().get(i);
+            article.setArticleAmount(article.getArticleAmount() + amountToAdd);
+        }
+
+        return articlePersistencePort.saveAllArticles(articleList);
+    }
+
+    private void validateSupplyData(Supply supply, List<Article> articleList, List<Integer> notFoundIds) {
+        if (articleList.size() != supply.getArticleIds().size()) {
+            throw new ArticleNotFoundException(notFoundIds);
+        }
+
+        if (articleList.size() != supply.getAmounts().size()) {
+            throw new SupplyAmountMismatchException();
+        }
     }
 
     private List<Article> applyFilters(String filterBy, String brandName, String categoryName, List<Article> articleList) {

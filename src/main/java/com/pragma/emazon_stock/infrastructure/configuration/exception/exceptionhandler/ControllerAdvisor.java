@@ -1,7 +1,9 @@
 package com.pragma.emazon_stock.infrastructure.configuration.exception.exceptionhandler;
 
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.pragma.emazon_stock.domain.exceptions.ArticleAlreadyExistsException;
 import com.pragma.emazon_stock.domain.exceptions.ArticleCategoryOutOfBoundsException;
+import com.pragma.emazon_stock.domain.exceptions.ArticleNotFoundException;
 import com.pragma.emazon_stock.domain.exceptions.BrandAlreadyExistsException;
 import com.pragma.emazon_stock.domain.exceptions.BrandDoesNotExistException;
 import com.pragma.emazon_stock.domain.exceptions.CategoryAlreadyExistsException;
@@ -12,6 +14,7 @@ import com.pragma.emazon_stock.domain.exceptions.NoContentBrandException;
 import com.pragma.emazon_stock.domain.exceptions.NoContentCategoryException;
 import com.pragma.emazon_stock.domain.exceptions.NotUniqueArticleCategoriesException;
 import com.pragma.emazon_stock.domain.exceptions.PageOutOfBoundsException;
+import com.pragma.emazon_stock.domain.exceptions.SupplyAmountMismatchException;
 import com.pragma.emazon_stock.domain.utils.Constants;
 import com.pragma.emazon_stock.infrastructure.configuration.exception.dto.PaginatedResponse;
 import com.pragma.emazon_stock.infrastructure.configuration.exception.dto.Response;
@@ -131,6 +134,44 @@ public class ControllerAdvisor {
         );
     }
 
+    @ExceptionHandler(SupplyAmountMismatchException.class)
+    public ResponseEntity<Response> handleSupplyAmountMismatchException(
+            SupplyAmountMismatchException supplyAmountMismatchException
+    ) {
+        return new ResponseEntity<>(
+                Response.builder()
+                        .statusCode(HttpStatus.BAD_REQUEST)
+                        .message(supplyAmountMismatchException.getMessage())
+                        .build(),
+                HttpStatus.BAD_REQUEST
+        );
+    }
+
+    @ExceptionHandler(JWTVerificationException.class)
+    public ResponseEntity<Response> handleJWTVerificationException(
+            JWTVerificationException jWTVerificationException
+    ) {
+        return new ResponseEntity<>(
+                Response.builder()
+                        .statusCode(HttpStatus.UNAUTHORIZED)
+                        .message(jWTVerificationException.getMessage())
+                        .build(),
+                HttpStatus.UNAUTHORIZED
+        );
+    }
+
+    @ExceptionHandler(ArticleNotFoundException.class)
+    public ResponseEntity<Response> handleArticleNotFoundException(
+            ArticleNotFoundException articleNotFoundException
+    ) {
+        return new ResponseEntity<>(
+                Response.builder()
+                        .statusCode(HttpStatus.NOT_FOUND)
+                        .message(articleNotFoundException.getMessage() + articleNotFoundException.getNotFoundIds())
+                        .build(),
+                HttpStatus.NOT_FOUND
+        );
+    }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Response> handleMethodArgumentNotValidException(
@@ -140,7 +181,6 @@ public class ControllerAdvisor {
         List<String> errors = methodArgumentNotValidException.getAllErrors().stream()
                 .map(MessageSourceResolvable::getDefaultMessage)
                 .toList();
-
 
         return new ResponseEntity<>(
                 Response.builder()

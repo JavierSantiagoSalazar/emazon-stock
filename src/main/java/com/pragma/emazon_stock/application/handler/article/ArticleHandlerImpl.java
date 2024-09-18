@@ -2,11 +2,14 @@ package com.pragma.emazon_stock.application.handler.article;
 
 import com.pragma.emazon_stock.application.dto.article.ArticleRequest;
 import com.pragma.emazon_stock.application.dto.article.ArticleResponse;
+import com.pragma.emazon_stock.application.dto.article.SupplyRequest;
 import com.pragma.emazon_stock.application.mappers.article.ArticleRequestMapper;
 import com.pragma.emazon_stock.application.mappers.article.ArticleResponseMapper;
+import com.pragma.emazon_stock.application.mappers.article.SupplyRequestMapper;
 import com.pragma.emazon_stock.domain.api.ArticleServicePort;
 import com.pragma.emazon_stock.domain.model.Article;
 import com.pragma.emazon_stock.domain.model.Pagination;
+import com.pragma.emazon_stock.domain.model.Supply;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +25,7 @@ public class ArticleHandlerImpl implements ArticleHandler {
     private final ArticleServicePort articleServicePort;
     private final ArticleRequestMapper articleRequestMapper;
     private final ArticleResponseMapper articleResponseMapper;
+    private final SupplyRequestMapper supplyRequestMapper;
 
     @Override
     public void createArticle(ArticleRequest articleRequest) {
@@ -63,6 +67,12 @@ public class ArticleHandlerImpl implements ArticleHandler {
                 paginationArticles.getTotalPages(),
                 paginationArticles.getIsLastPage()
         );
+    }
+
+    @Override
+    public Boolean updateArticleSupply(SupplyRequest supplyRequest) {
+        Supply supply = supplyRequestMapper.toDomain(supplyRequest);
+        return articleServicePort.updateArticleSupply(supply);
     }
 
 }

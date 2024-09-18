@@ -48,7 +48,9 @@ public class SecurityConfiguration {
                     WHITE_LIST.forEach(endpoint ->
                             http.requestMatchers(HttpMethod.GET, endpoint).permitAll()
                     );
-                    http.anyRequest().authenticated();
+                    http.requestMatchers(HttpMethod.PATCH, ARTICLE_URL)
+                            .hasRole(Constants.ROLE_WAREHOUSE_ASSISTANT);
+                    http.anyRequest().permitAll();
                 })
                 .addFilterBefore(jwtValidatorFilter, BasicAuthenticationFilter.class)
                 .exceptionHandling(exceptionHandling ->

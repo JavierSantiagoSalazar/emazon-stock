@@ -19,4 +19,6 @@ public interface ArticleEntityMapper {
     @Mapping(target = "articleBrand.brandArticles", ignore = true)
     List<Article> toArticleList(List<ArticleEntity> articleEntityList);
 
+    List<ArticleEntity> toEntityList(List<Article> articles);
+
 }

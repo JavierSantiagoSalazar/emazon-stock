@@ -3,10 +3,12 @@ package com.pragma.emazon_stock.infrastructure.input.rest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pragma.emazon_stock.application.dto.article.ArticleRequest;
 import com.pragma.emazon_stock.application.dto.article.ArticleResponse;
+import com.pragma.emazon_stock.application.dto.article.SupplyRequest;
 import com.pragma.emazon_stock.application.dto.brand.BrandResponse;
 import com.pragma.emazon_stock.application.dto.category.EmbeddedCategoryResponse;
 import com.pragma.emazon_stock.application.handler.article.ArticleHandler;
 import com.pragma.emazon_stock.domain.exceptions.ArticleAlreadyExistsException;
+import com.pragma.emazon_stock.domain.exceptions.ArticleNotFoundException;
 import com.pragma.emazon_stock.domain.exceptions.InvalidFilteringParameterException;
 import com.pragma.emazon_stock.domain.exceptions.PageOutOfBoundsException;
 import com.pragma.emazon_stock.domain.model.Pagination;
@@ -33,6 +35,7 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -321,5 +324,49 @@ class ArticleRestControllerTest {
                 .andExpect(jsonPath("$.statusCode").value(HttpStatus.BAD_REQUEST.name()))
                 .andExpect(jsonPath("$.message").value("Invalid value for filterBy parameter: art. Allowed values are 'articleName', 'brandName', 'categoryName'."));
     }
+
+    @Test
+    void givenValidSupplyRequest_whenUpdateArticleAmount_thenReturns200() throws Exception {
+        SupplyRequest supplyRequest = new SupplyRequest();
+        supplyRequest.setSupplyArticleIds(List.of(1, 2));
+        supplyRequest.setSupplyArticleAmounts(List.of(50, 100));
+
+        when(articleHandler.updateArticleSupply(any(SupplyRequest.class))).thenReturn(true);
+
+        mockMvc.perform(patch("/article/")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(supplyRequest)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").value(true));
+    }
+
+    @Test
+    void givenInvalidSupplyRequest_whenUpdateArticleAmount_thenReturns400() throws Exception {
+        SupplyRequest invalidRequest = new SupplyRequest();
+        invalidRequest.setSupplyArticleIds(List.of(-1, -2));
+        invalidRequest.setSupplyArticleAmounts(List.of(50, 100));
+
+        mockMvc.perform(patch("/article/")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(invalidRequest)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void givenNonExistingArticle_whenUpdateArticleAmount_thenReturns404() throws Exception {
+
+        SupplyRequest supplyRequest = new SupplyRequest();
+        supplyRequest.setSupplyArticleIds(List.of(4, 5));
+        supplyRequest.setSupplyArticleAmounts(List.of(50, 100));
+
+        when(articleHandler.updateArticleSupply(any(SupplyRequest.class)))
+                .thenThrow(new ArticleNotFoundException(List.of(4, 5)));
+
+        mockMvc.perform(patch("/article/")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(supplyRequest)))
+                .andExpect(status().isNotFound());
+    }
+
 
 }

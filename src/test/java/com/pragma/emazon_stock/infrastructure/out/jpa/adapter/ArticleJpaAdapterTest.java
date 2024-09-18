@@ -11,6 +11,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -54,7 +55,7 @@ class ArticleJpaAdapterTest {
     }
 
     @Test
-    void givenArticleNameAlreadyExists_whenCheckIfArticleExists_thenReturnTrue() {
+    void givenArticleNameAlreadyExists_whenGetArticleById_thenReturnTrue() {
 
         when(articleRepository.findByArticleName(defaultArticle.getArticleName())).thenReturn(Optional.of(defaultArticleEntity));
 
@@ -66,7 +67,7 @@ class ArticleJpaAdapterTest {
     }
 
     @Test
-    void givenArticleNameDoesNotExist_whenCheckIfArticleExists_thenReturnFalse() {
+    void givenArticleNameDoesNotExist_whenGetArticleById_thenReturnFalse() {
 
         when(articleRepository.findByArticleName(defaultArticle.getArticleName())).thenReturn(Optional.empty());
 
@@ -113,6 +114,59 @@ class ArticleJpaAdapterTest {
 
         verify(articleRepository, times(1)).findAll();
         verify(articleEntityMapper, times(1)).toArticleList(articleEntityList);
+    }
+
+    @Test
+    void givenArticleIds_whenGetArticlesByIds_thenReturnArticleList() {
+
+        List<Integer> articleIds = List.of(1, 2);
+        List<ArticleEntity> articleEntityList = List.of(defaultArticleEntity);
+        List<Article> articleList = List.of(defaultArticle);
+
+        when(articleRepository.findAllByArticleId(articleIds)).thenReturn(articleEntityList);
+        when(articleEntityMapper.toArticleList(articleEntityList)).thenReturn(articleList);
+
+        List<Article> result = articleJpaAdapter.getArticlesByIds(articleIds);
+
+        assertEquals(1, result.size());
+        assertEquals(defaultArticle.getArticleName(), result.get(0).getArticleName());
+
+        verify(articleRepository, times(1)).findAllByArticleId(articleIds);
+        verify(articleEntityMapper, times(1)).toArticleList(articleEntityList);
+    }
+
+    @Test
+    void givenArticles_whenSaveAllArticles_thenReturnTrue() {
+
+        List<Article> articleList = List.of(defaultArticle);
+        List<ArticleEntity> articleEntityList = List.of(defaultArticleEntity);
+
+        when(articleEntityMapper.toEntityList(articleList)).thenReturn(articleEntityList);
+        when(articleRepository.saveAll(articleEntityList)).thenReturn(articleEntityList);
+
+        Boolean result = articleJpaAdapter.saveAllArticles(articleList);
+
+        assertTrue(result);
+
+        verify(articleRepository, times(1)).saveAll(articleEntityList);
+        verify(articleEntityMapper, times(1)).toEntityList(articleList);
+    }
+
+    @Test
+    void givenEmptyArticleList_whenSaveAllArticles_thenReturnFalse() {
+
+        List<Article> articleList = List.of(defaultArticle);
+        List<ArticleEntity> articleEntityList = List.of(defaultArticleEntity);
+
+        when(articleEntityMapper.toEntityList(articleList)).thenReturn(articleEntityList);
+        when(articleRepository.saveAll(articleEntityList)).thenReturn(Collections.emptyList());
+
+        Boolean result = articleJpaAdapter.saveAllArticles(articleList);
+
+        assertFalse(result);
+
+        verify(articleRepository, times(1)).saveAll(articleEntityList);
+        verify(articleEntityMapper, times(1)).toEntityList(articleList);
     }
 
 }
