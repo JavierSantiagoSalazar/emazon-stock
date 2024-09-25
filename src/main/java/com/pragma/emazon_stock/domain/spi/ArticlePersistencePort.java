@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface ArticlePersistencePort {
 
-    void saveArticle(Article article);
+    Article saveArticle(Article article);
 
     Boolean checkIfArticleExists(String articleName);
 

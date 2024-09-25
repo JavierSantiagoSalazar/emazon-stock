@@ -11,9 +11,11 @@ import com.pragma.emazon_stock.domain.model.Brand;
 import com.pragma.emazon_stock.domain.model.Category;
 import com.pragma.emazon_stock.domain.model.Pagination;
 import com.pragma.emazon_stock.domain.model.Supply;
+import com.pragma.emazon_stock.domain.model.SupplyTransaction;
 import com.pragma.emazon_stock.domain.spi.ArticlePersistencePort;
 import com.pragma.emazon_stock.domain.spi.BrandPersistencePort;
 import com.pragma.emazon_stock.domain.spi.CategoryPersistencePort;
+import com.pragma.emazon_stock.domain.spi.FeignClientPort;
 import com.pragma.emazon_stock.domain.utils.ArticleValidator;
 import com.pragma.emazon_stock.domain.utils.Constants;
 import lombok.AllArgsConstructor;
@@ -34,6 +36,7 @@ public class ArticleUseCase implements ArticleServicePort {
     private final ArticlePersistencePort articlePersistencePort;
     private final CategoryPersistencePort categoryPersistencePort;
     private final BrandPersistencePort brandPersistencePort;
+    private final FeignClientPort feignClientPort;
 
     @Override
     public void saveArticle(Article article) {
@@ -53,12 +56,30 @@ public class ArticleUseCase implements ArticleServicePort {
 
         article.setArticleBrand(brand);
         article.setArticleCategories(categoryList);
-        articlePersistencePort.saveArticle(article);
+        Article savedArticle = articlePersistencePort.saveArticle(article);
+        feignClientPort.addNewRegisterFromStock(
+                new SupplyTransaction(savedArticle.getArticleId(), savedArticle.getArticleAmount())
+        );
     }
 
     @Override
     public boolean checkIfArticleExists(String articleName) {
         return articlePersistencePort.checkIfArticleExists(articleName);
+    }
+
+    @Override
+    public List<Article> getArticlesByIds(List<Integer> articleIdList) {
+        List<Article> articles = articlePersistencePort.getArticlesByIds(articleIdList);
+
+        List<Integer> notFoundIds = articleIdList.stream()
+                .filter(id -> !articles.stream().map(Article::getArticleId).toList().contains(id))
+                .toList();
+
+        if (!notFoundIds.isEmpty()) {
+            throw new ArticleNotFoundException(notFoundIds);
+        }
+
+        return articles;
     }
 
     @Override

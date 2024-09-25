@@ -50,11 +50,12 @@ public class SecurityConfiguration {
                     );
                     http.requestMatchers(HttpMethod.PATCH, ARTICLE_URL)
                             .hasRole(Constants.ROLE_WAREHOUSE_ASSISTANT);
-                    http.anyRequest().permitAll();
+                    http.anyRequest().authenticated();
                 })
                 .addFilterBefore(jwtValidatorFilter, BasicAuthenticationFilter.class)
                 .exceptionHandling(exceptionHandling ->
-                        exceptionHandling.authenticationEntryPoint(customAuthenticationEntryPoint))
+                        exceptionHandling.authenticationEntryPoint(customAuthenticationEntryPoint)
+                )
                 .build();
     }
 

@@ -75,4 +75,9 @@ public class ArticleHandlerImpl implements ArticleHandler {
         return articleServicePort.updateArticleSupply(supply);
     }
 
+    @Override
+    public List<ArticleResponse> getArticlesByIds(List<Integer> articleIdList) {
+        return articleResponseMapper.toResponse(articleServicePort.getArticlesByIds(articleIdList));
+    }
+
 }

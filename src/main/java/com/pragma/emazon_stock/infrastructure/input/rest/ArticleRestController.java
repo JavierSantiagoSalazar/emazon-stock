@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/article")
@@ -141,6 +142,30 @@ public class ArticleRestController {
     public ResponseEntity<Boolean> updateArticleAmount(@Valid @RequestBody SupplyRequest supplyRequest) {
         boolean isUpdated = articleHandler.updateArticleSupply(supplyRequest);
         return ResponseEntity.ok(isUpdated);
+    }
+
+    @Operation(summary = Constants.GET_ARTICLES_BY_IDS)
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = HttpStatusCode.OK,
+                    description = Constants.ARTICLES_FOUND,
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = HttpStatusCode.NOT_FOUND,
+                    description = Constants.ARTICLE_NOT_FOUND,
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = HttpStatusCode.BAD_REQUEST,
+                    description = Constants.INVALID_REQUEST,
+                    content = @Content
+            )
+    })
+    @GetMapping("/get-articles-by-ids")
+    public ResponseEntity<List<ArticleResponse>> getArticlesByIds(@RequestParam List<Integer> articleIdList) {
+        List<ArticleResponse> responseList = articleHandler.getArticlesByIds(articleIdList);
+        return ResponseEntity.ok(responseList);
     }
 
 }

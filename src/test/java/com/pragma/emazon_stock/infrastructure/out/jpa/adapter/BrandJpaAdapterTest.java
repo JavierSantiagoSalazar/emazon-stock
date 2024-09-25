@@ -1,5 +1,6 @@
 package com.pragma.emazon_stock.infrastructure.out.jpa.adapter;
 
+import com.pragma.emazon_stock.domain.exceptions.BrandDoesNotExistException;
 import com.pragma.emazon_stock.domain.model.Brand;
 import com.pragma.emazon_stock.infrastructure.out.jpa.entity.BrandEntity;
 import com.pragma.emazon_stock.infrastructure.out.jpa.mapper.BrandEntityMapper;
@@ -16,7 +17,9 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -102,6 +105,38 @@ class BrandJpaAdapterTest {
         verify(brandRepository, times(1)).findAll();
 
         verify(brandEntityMapper, times(1)).toBrandList(brandEntityList);
+    }
+
+    @Test
+    void givenExistingBrandName_whenGetBrandByName_thenReturnBrand() {
+
+        String brandName = "NOKIA";
+
+        when(brandRepository.findByBrandName(brandName)).thenReturn(Optional.of(defaultBrandEntity));
+        when(brandEntityMapper.toDomain(defaultBrandEntity)).thenReturn(defaultBrand);
+
+        Brand result = brandJpaAdapter.getBrandByName(brandName);
+
+        assertEquals(defaultBrand, result);
+        verify(brandRepository, times(1)).findByBrandName(brandName);
+        verify(brandEntityMapper, times(1)).toDomain(defaultBrandEntity);
+    }
+
+    @Test
+    void givenNonExistingBrandName_whenGetBrandByName_thenThrowBrandDoesNotExistException() {
+
+        String brandName = "UNKNOWN";
+
+        when(brandRepository.findByBrandName(brandName)).thenReturn(Optional.empty());
+
+        BrandDoesNotExistException exception = assertThrows(
+                BrandDoesNotExistException.class,
+                () -> brandJpaAdapter.getBrandByName(brandName)
+        );
+        assertEquals("The requested brand does not exist, requested brand: UNKNOWN", exception.getMessage());
+
+        verify(brandRepository, times(1)).findByBrandName(brandName);
+        verify(brandEntityMapper, times(0)).toDomain(any());
     }
 
 }

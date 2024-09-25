@@ -6,6 +6,8 @@ import com.pragma.emazon_stock.domain.utils.Constants;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
 
+import java.util.List;
+
 @Mapper(componentModel = Constants.SPRING_COMPONENT_MODEL,
         unmappedTargetPolicy = ReportingPolicy.IGNORE,
         unmappedSourcePolicy = ReportingPolicy.IGNORE)
@@ -13,5 +15,7 @@ import org.mapstruct.ReportingPolicy;
 public interface ArticleResponseMapper {
 
     ArticleResponse toResponse(Article article);
+
+    List<ArticleResponse> toResponse(List<Article> article);
 
 }

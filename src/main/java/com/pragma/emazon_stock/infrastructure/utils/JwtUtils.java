@@ -4,6 +4,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.pragma.emazon_stock.domain.utils.Constants;
@@ -20,6 +21,7 @@ public class JwtUtils {
     private String userGenerator;
 
     public DecodedJWT validateToken(String token) {
+
         try {
             Algorithm algorithm = Algorithm.HMAC256(this.privateKey);
 
@@ -28,6 +30,8 @@ public class JwtUtils {
                     .build();
 
             return verifier.verify(token);
+        } catch (TokenExpiredException expiredException) {
+            throw new TokenExpiredException(expiredException.getMessage(), expiredException.getExpiredOn());
         } catch (JWTVerificationException exception) {
             throw new JWTVerificationException(Constants.INVALID_TOKEN);
         }

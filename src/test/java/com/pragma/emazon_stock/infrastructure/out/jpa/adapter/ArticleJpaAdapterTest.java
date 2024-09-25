@@ -104,7 +104,7 @@ class ArticleJpaAdapterTest {
         List<Article> articleList = List.of(article);
 
         when(articleRepository.findAll()).thenReturn(articleEntityList);
-        when(articleEntityMapper.toArticleList(articleEntityList)).thenReturn(articleList);
+        when(articleEntityMapper.toDomainList(articleEntityList)).thenReturn(articleList);
 
         List<Article> result = articleJpaAdapter.getAllArticles();
 
@@ -113,7 +113,7 @@ class ArticleJpaAdapterTest {
         assertEquals("A powerful laptop", result.get(0).getArticleDescription());
 
         verify(articleRepository, times(1)).findAll();
-        verify(articleEntityMapper, times(1)).toArticleList(articleEntityList);
+        verify(articleEntityMapper, times(1)).toDomainList(articleEntityList);
     }
 
     @Test
@@ -124,7 +124,7 @@ class ArticleJpaAdapterTest {
         List<Article> articleList = List.of(defaultArticle);
 
         when(articleRepository.findAllByArticleId(articleIds)).thenReturn(articleEntityList);
-        when(articleEntityMapper.toArticleList(articleEntityList)).thenReturn(articleList);
+        when(articleEntityMapper.toDomainList(articleEntityList)).thenReturn(articleList);
 
         List<Article> result = articleJpaAdapter.getArticlesByIds(articleIds);
 
@@ -132,7 +132,7 @@ class ArticleJpaAdapterTest {
         assertEquals(defaultArticle.getArticleName(), result.get(0).getArticleName());
 
         verify(articleRepository, times(1)).findAllByArticleId(articleIds);
-        verify(articleEntityMapper, times(1)).toArticleList(articleEntityList);
+        verify(articleEntityMapper, times(1)).toDomainList(articleEntityList);
     }
 
     @Test
