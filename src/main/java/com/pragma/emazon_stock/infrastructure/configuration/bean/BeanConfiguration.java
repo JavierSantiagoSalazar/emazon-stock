@@ -6,10 +6,14 @@ import com.pragma.emazon_stock.domain.api.CategoryServicePort;
 import com.pragma.emazon_stock.domain.spi.ArticlePersistencePort;
 import com.pragma.emazon_stock.domain.spi.BrandPersistencePort;
 import com.pragma.emazon_stock.domain.spi.CategoryPersistencePort;
+import com.pragma.emazon_stock.domain.spi.FeignClientPort;
 import com.pragma.emazon_stock.domain.usecase.ArticleUseCase;
 import com.pragma.emazon_stock.domain.usecase.BrandUseCase;
 import com.pragma.emazon_stock.domain.usecase.CategoryUseCase;
 import com.pragma.emazon_stock.infrastructure.configuration.security.exceptionhandler.CustomAuthenticationEntryPoint;
+import com.pragma.emazon_stock.infrastructure.feing.TransactionFeignClient;
+import com.pragma.emazon_stock.infrastructure.out.feing.adapter.FeignClientAdapter;
+import com.pragma.emazon_stock.infrastructure.out.feing.mapper.SupplyTransactionRequestMapper;
 import com.pragma.emazon_stock.infrastructure.out.jpa.adapter.ArticleJpaAdapter;
 import com.pragma.emazon_stock.infrastructure.out.jpa.adapter.BrandJpaAdapter;
 import com.pragma.emazon_stock.infrastructure.out.jpa.adapter.CategoryJpaAdapter;
@@ -38,6 +42,9 @@ public class BeanConfiguration {
     private final ArticleRepository articleRepository;
     private final ArticleEntityMapper articleEntityMapper;
 
+    private final TransactionFeignClient transactionFeignClient;
+    private final SupplyTransactionRequestMapper supplyTransactionRequestMapper;
+
     @Bean
     public CategoryPersistencePort categoryPersistencePort() {
         return new CategoryJpaAdapter(categoryRepository, categoryEntityMapper);
@@ -59,13 +66,23 @@ public class BeanConfiguration {
     }
 
     @Bean
+    public FeignClientPort feignClientPort() {
+        return new FeignClientAdapter(transactionFeignClient, supplyTransactionRequestMapper);
+    }
+
+    @Bean
     public ArticlePersistencePort articlePersistencePort() {
         return new ArticleJpaAdapter(articleRepository, articleEntityMapper);
     }
 
     @Bean
     public ArticleServicePort articleServicePort() {
-        return new ArticleUseCase(articlePersistencePort(), categoryPersistencePort(), brandPersistencePort());
+        return new ArticleUseCase(
+                articlePersistencePort(),
+                categoryPersistencePort(),
+                brandPersistencePort(),
+                feignClientPort()
+        );
     }
 
     @Bean

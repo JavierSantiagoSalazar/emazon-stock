@@ -27,6 +27,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.hamcrest.Matchers.containsString;
@@ -74,8 +75,7 @@ class ArticleRestControllerTest {
         BrandResponse brandResponse = new BrandResponse();
         brandResponse.setBrandName("Apple");
 
-        EmbeddedCategoryResponse embeddedCategoryResponse = new EmbeddedCategoryResponse();
-        embeddedCategoryResponse.setName("PHONES");
+        EmbeddedCategoryResponse embeddedCategoryResponse = new EmbeddedCategoryResponse(1,"PHONES");
 
         articleResponse = new ArticleResponse();
         articleResponse.setArticleId(1);
@@ -322,7 +322,8 @@ class ArticleRestControllerTest {
                         .param("size", "10"))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.statusCode").value(HttpStatus.BAD_REQUEST.name()))
-                .andExpect(jsonPath("$.message").value("Invalid value for filterBy parameter: art. Allowed values are 'articleName', 'brandName', 'categoryName'."));
+                .andExpect(jsonPath("$.message")
+                        .value("Invalid value for filterBy parameter: art. Allowed values are 'articleName', 'brandName', 'categoryName'."));
     }
 
     @Test
@@ -368,5 +369,45 @@ class ArticleRestControllerTest {
                 .andExpect(status().isNotFound());
     }
 
+    @Test
+    void givenValidArticleIds_whenGetArticlesByIds_thenReturnsArticlesList() throws Exception {
+        List<Integer> articleIdList = List.of(1, 2);
+        List<ArticleResponse> articleResponseList = List.of(articleResponse);
+
+        when(articleHandler.getArticlesByIds(articleIdList)).thenReturn(articleResponseList);
+
+        mockMvc.perform(get("/article/get-articles-by-ids")
+                        .param("articleIdList", "1", "2"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.size()").value(articleResponseList.size()))
+                .andExpect(jsonPath("$[0].articleId").value(articleResponse.getArticleId()))
+                .andExpect(jsonPath("$[0].articleName").value(articleResponse.getArticleName()));
+    }
+
+    @Test
+    void givenInvalidArticleIds_whenGetArticlesByIds_thenReturnsEmptyList() throws Exception {
+        List<Integer> articleIdList = List.of(999, 1000);
+        List<ArticleResponse> emptyResponseList = Collections.emptyList();
+
+        when(articleHandler.getArticlesByIds(articleIdList)).thenReturn(emptyResponseList);
+
+        mockMvc.perform(get("/article/get-articles-by-ids")
+                        .param("articleIdList", "999", "1000"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.size()").value(0));
+    }
+
+    @Test
+    void givenInvalidArticleIds_whenGetArticlesByIds_thenReturns404() throws Exception {
+        List<Integer> invalidArticleIdList = List.of(-1, -2);
+
+        when(articleHandler.getArticlesByIds(invalidArticleIdList))
+                .thenThrow(new ArticleNotFoundException(invalidArticleIdList));
+
+        mockMvc.perform(get("/article/get-articles-by-ids")
+                        .param("articleIdList", "-1", "-2"))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.statusCode").value(HttpStatus.NOT_FOUND.name()));
+    }
 
 }

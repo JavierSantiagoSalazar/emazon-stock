@@ -14,9 +14,11 @@ import com.pragma.emazon_stock.domain.model.Article;
 import com.pragma.emazon_stock.domain.model.Category;
 import com.pragma.emazon_stock.domain.model.Pagination;
 import com.pragma.emazon_stock.domain.model.Supply;
+import com.pragma.emazon_stock.domain.model.SupplyTransaction;
 import com.pragma.emazon_stock.domain.spi.ArticlePersistencePort;
 import com.pragma.emazon_stock.domain.spi.BrandPersistencePort;
 import com.pragma.emazon_stock.domain.spi.CategoryPersistencePort;
+import com.pragma.emazon_stock.domain.spi.FeignClientPort;
 import com.pragma.emazon_stock.utils.ModelsTestFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -48,6 +50,8 @@ class ArticleUseCaseTest {
     private CategoryPersistencePort categoryPersistencePort;
     @Mock
     private BrandPersistencePort brandPersistencePort;
+    @Mock
+    private FeignClientPort feignClientPort;
 
     @InjectMocks
     private ArticleUseCase articleUseCase;
@@ -63,21 +67,6 @@ class ArticleUseCaseTest {
         articleList = List.of(defaultArticle);
     }
 
-    @Test
-    void givenArticleDoesNotExist_whenSaveArticleIsCalled_thenArticleIsSaved() {
-
-        when(articlePersistencePort.checkIfArticleExists(defaultArticle.getArticleName())).thenReturn(false);
-        when(brandPersistencePort.getBrandByName(defaultArticle.getArticleBrand().getBrandName())).thenReturn(defaultArticle.getArticleBrand());
-        when(categoryPersistencePort.getAllCategoriesByName(anyList())).thenReturn(defaultArticle.getArticleCategories());
-
-        articleUseCase.saveArticle(defaultArticle);
-
-        verify(articlePersistencePort, times(1)).checkIfArticleExists(defaultArticle.getArticleName());
-        verify(brandPersistencePort, times(1)).getBrandByName(defaultArticle.getArticleBrand().getBrandName());
-        verify(categoryPersistencePort, times(1)).getAllCategoriesByName(anyList());
-        verify(articlePersistencePort, times(1)).saveArticle(defaultArticle);
-
-    }
 
     @Test
     void givenArticleAlreadyExists_whenSaveArticleIsCalled_thenThrowsException() {
@@ -361,5 +350,40 @@ class ArticleUseCaseTest {
         verify(articlePersistencePort, times(1)).getArticlesByIds(supply.getArticleIds());
         verify(articlePersistencePort, never()).saveAllArticles(anyList());
     }
+
+    @Test
+    void givenValidArticleIds_whenGetArticlesByIdsIsCalled_thenReturnArticles() {
+        when(articlePersistencePort.getArticlesByIds(List.of(1))).thenReturn(articleList);
+
+        List<Article> result = articleUseCase.getArticlesByIds(List.of(1));
+
+        assertEquals(articleList, result);
+        verify(articlePersistencePort, times(1)).getArticlesByIds(List.of(1));
+    }
+
+    @Test
+    void givenNonExistentArticleIds_whenGetArticlesByIdsIsCalled_thenThrowArticleNotFoundException() {
+        when(articlePersistencePort.getArticlesByIds(List.of(1, 2))).thenReturn(List.of(defaultArticle));
+
+        List<Integer> ids = List.of(1, 2);
+        ArticleNotFoundException exception = assertThrows(ArticleNotFoundException.class,
+                () -> articleUseCase.getArticlesByIds(ids));
+
+        assertEquals(List.of(2), exception.getNotFoundIds());
+        verify(articlePersistencePort, times(1)).getArticlesByIds(List.of(1, 2));
+    }
+
+    @Test
+    void givenValidArticle_whenSaveArticleIsCalled_thenFeignClientIsCalledForStockRegister() {
+        when(articlePersistencePort.checkIfArticleExists(defaultArticle.getArticleName())).thenReturn(false);
+        when(brandPersistencePort.getBrandByName(defaultArticle.getArticleBrand().getBrandName())).thenReturn(defaultArticle.getArticleBrand());
+        when(categoryPersistencePort.getAllCategoriesByName(anyList())).thenReturn(defaultArticle.getArticleCategories());
+        when(articlePersistencePort.saveArticle(defaultArticle)).thenReturn(defaultArticle);
+
+        articleUseCase.saveArticle(defaultArticle);
+
+        verify(feignClientPort, times(1)).addNewRegisterFromStock(any(SupplyTransaction.class));
+    }
+
 
 }

@@ -4,6 +4,8 @@ import com.pragma.emazon_stock.domain.model.Article;
 import com.pragma.emazon_stock.domain.model.Pagination;
 import com.pragma.emazon_stock.domain.model.Supply;
 
+import java.util.List;
+
 public interface ArticleServicePort {
 
     void saveArticle(Article article);
@@ -20,5 +22,7 @@ public interface ArticleServicePort {
     );
 
     Boolean updateArticleSupply(Supply supply);
+
+    List<Article> getArticlesByIds(List<Integer> articleIdList);
 
 }

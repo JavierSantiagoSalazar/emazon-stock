@@ -2,6 +2,8 @@ package com.pragma.emazon_stock.domain.utils;
 
 public class Constants {
 
+
+
     private Constants() {
         throw new IllegalStateException(UTILITY_CLASS);
     }
@@ -11,6 +13,13 @@ public class Constants {
     public static final String DESC_COMPARATOR = "desc";
     public static final String UTILITY_CLASS = "Utility class";
 
+    /* --- FEIGN CONSTANTS --- */
+
+    public static final String TRANSACTION_MICROSERVICE_NAME = "emazon-transaction";
+    public static final String TRANSACTION_SERVICE_UNAVAILABLE = "The Transaction-Service is unavailable";
+    public static final String INVALID_REQUEST_ERROR = "Invalid request to the endpoint: ";
+    public static final String INTERNAL_SERVER_ERROR = "Internal server error";
+
     /* --- USE CASES CONSTANTS --- */
 
     public static final Short PAGE_INDEX_HELPER = 1;
@@ -19,8 +28,11 @@ public class Constants {
     public static final String GET_BY_CATEGORY = "categoryName";
 
     /* --- JWT CONSTANTS --- */
+
     public static final String CLAIM_AUTHORITIES = "authorities";
     public static final String INVALID_TOKEN = "Token invalid, not Authorized";
+    public static final String JWT_IS_EMPTY_ERROR = "The JWT is empty";
+    public static final String UNAUTHORIZED_ERROR = "Unauthorized for the resource: ";
 
     /* --- SECURITY CONSTANTS --- */
 
@@ -107,7 +119,7 @@ public class Constants {
     public static final String ARTICLE_CATEGORIES_MUST_NOT_BE_NULL = "The article categories must not be null";
     public static final String ARTICLE_ID_MUST_NOT_BE_NULL = "Article ID cannot be null";
     public static final String ARTICLE_ID_MUST_BE_POSITIVE = "Article ID must be a positive number";
-    public static final String ARTICLE_AMOUNT_MUST_BE_POSITIVE = "Article amount must be a positive number";
+    public static final String ARTICLE_AMOUNT_MUST_BE_POSITIVE = "Article amount must be a positive number or zero";
 
     /* --- OPENAPI CONSTANTS --- */
 
@@ -126,6 +138,10 @@ public class Constants {
     public static final String ARTICLE_UPDATED = "Article updated";
     public static final String ARTICLE_NOT_FOUND = "One or more articles were not found";
     public static final String ARTICLE_INVALID_REQUEST = "Bad request";
+
+    public static final String GET_ARTICLES_BY_IDS = "Get Articles by IDs";
+    public static final String ARTICLES_FOUND = "Articles found successfully";
+    public static final String INVALID_REQUEST = "Invalid request";
 
     public static final String ARTICLE_CREATED = "Article created";
     public static final String ARTICLE_ALREADY_EXISTS = "Article already exists";
